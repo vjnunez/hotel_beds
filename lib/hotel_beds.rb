@@ -1,5 +1,2 @@
 require "hotel_beds/version"
-
-module HotelBeds
-  # Your code goes here...
-end
+require "hotel_beds/client"

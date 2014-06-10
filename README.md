@@ -4,17 +4,17 @@ The `hotel_beds` gem interfaces with the [HotelBeds.com](http://www.hotelbeds.co
 
 I'm sure you know how to install Ruby gems by now...
 
-Gemfile:
+In your Gemfile, before a `bundle install`, add:
 
     gem "hotel_beds", "~> 0.0.1"
 
-Manually:
+Manually, via command line:
 
-    $ gem install hotel_beds
+    gem install hotel_beds
 
 ## Usage
 
-TODO: Write usage instructions here
+    client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
 
 ## Contributing
 
