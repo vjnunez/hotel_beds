@@ -56,4 +56,34 @@ RSpec.describe HotelBeds::Configuration do
       expect(subject.proxy).to eq(proxy)
     end
   end
+  
+  describe "#proxy?" do
+    context "when proxy is specified" do
+      let(:proxy) { "http://example.com/proxy" }
+
+      it "should return true when a proxy is specified" do
+        expect(subject.proxy?).to eq(true)
+      end
+    end
+    
+    context "when no proxy is specified" do
+      let(:proxy) { nil }
+
+      it "should return false" do
+        expect(subject.proxy?).to eq(false)
+      end
+    end
+  end
+  
+  describe "#request_timeout" do
+    it "should default to 5 seconds" do
+      expect(subject.request_timeout).to eq(5)
+    end
+  end
+  
+  describe "#response_timeout" do
+    it "should default to 30 seconds" do
+      expect(subject.response_timeout).to eq(30)
+    end
+  end
 end
