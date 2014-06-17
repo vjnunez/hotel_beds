@@ -33,26 +33,28 @@ module HotelBeds
         config.pretty_print_xml true
         config.filters [:password]
       end
+      
+      freeze
     end
 
     def perform(operation)
+      message = operation.message
+      message.fetch(operation.namespace).merge!({
+        :@xmlns => "http://www.hotelbeds.com/schemas/2005/06/messages",
+        :"@xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+        :"@xsi:schemaLocation" => "http://www.hotelbeds.com/schemas/2005/06/messages #{operation.namespace}.xsd",
+        :@echoToken => operation.echo_token,
+        :@sessionId => operation.session_id,
+        :Credentials => { User: config.username, Password: config.password }
+      })
+      # send the call
       client.call(operation.method, {
-        :soap_action => "",
-        :attributes => {
+        soap_action: "",
+        attributes: {
           :"xmlns:hb" => "http://axis.frontend.hydra.hotelbeds.com",
           :"xsi:type" => "xsd:string",
         },
-        :message => { operation.namespace => {
-          :@xmlns => "http://www.hotelbeds.com/schemas/2005/06/messages",
-          :"@xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
-          :"@xsi:schemaLocation" => "http://www.hotelbeds.com/schemas/2005/06/messages #{operation.namespace}.xsd",
-          :"@echoToken" => "DummyEchoToken",
-          :"@sessionId" => "DummySessionId",
-          :Credentials => {
-            :User => config.username,
-            :Password => config.password
-          }
-        } }.merge(operation.message)
+        message: message
       })
     end
   end

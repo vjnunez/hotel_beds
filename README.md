@@ -15,6 +15,8 @@ Manually, via command line:
 ## Usage
 
     client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
+    search = HotelBeds::Model::Search.new(check_in_date: Date.today, check_out_date: Date.today + 1.day, rooms: [{ adult_count: 2 }], destination: "SYD")
+    response = client.perform(search)
 
 ## Contributing
 

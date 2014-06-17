@@ -13,6 +13,10 @@ RSpec.describe HotelBeds::Connection do
   
   subject { described_class.new(configuration) }
   
+  it "should be immutable" do
+    expect(subject).to be_frozen
+  end
+  
   it "should respond to #perform" do
     expect(subject).to respond_to(:perform)
   end

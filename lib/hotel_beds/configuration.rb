@@ -1,9 +1,10 @@
 module HotelBeds
   class Configuration
     def self.endpoints
+      path = "appservices/ws/FrontendService"
       {
-        test: "http://testapi.interface-xml.com/appservices/ws/FrontendService".freeze,
-        live: "http://api.interface-xml.com/appservices/ws/FrontendService".freeze,
+        test: "http://testapi.interface-xml.com/#{path}".freeze,
+        live: "http://api.interface-xml.com/#{path}".freeze,
       }
     end
     
