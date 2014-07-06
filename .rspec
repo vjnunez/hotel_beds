@@ -1,3 +1,4 @@
 --color
 --order rand
 --fail-fast
+--require spec_helper
