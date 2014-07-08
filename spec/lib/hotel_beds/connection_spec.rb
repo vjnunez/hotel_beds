@@ -7,7 +7,8 @@ RSpec.describe HotelBeds::Connection do
       response_timeout: 10,
       request_timeout: 2,
       proxy: "http://example.com:9090/proxy",
-      proxy?: true
+      proxy?: true,
+      enable_logging?: false
     })
   end
   

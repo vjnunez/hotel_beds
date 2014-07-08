@@ -6,20 +6,18 @@ require "active_model"
 module HotelBeds
   module Model
     class Base
+      # generator for random tokens
+      RANDOM_TOKEN = -> (model, attr) { SecureRandom.hex[0..15] }
+
+      # returns the operation for this model
       def self.operation_class
         HotelBeds::Operation.const_get(name.split("::").last)
       end
       
       # attributes
       include Virtus.model      
-      attribute :session_id, String, {
-        default: -> (model, attr) { SecureRandom.uuid },
-        writer: :private
-      }
-      attribute :echo_token, String, {
-        default: -> (model, attr) { SecureRandom.uuid },
-        writer: :private
-      }
+      attribute :session_id, String, default: RANDOM_TOKEN, writer: :private
+      attribute :echo_token, String, default: RANDOM_TOKEN, writer: :private
       
       # validation
       include ActiveModel::Validations

@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/platformq/hotel_beds.png)](https://codeclimate.com/github/platformq/hotel_beds)
+
 The `hotel_beds` gem interfaces with the [HotelBeds.com](http://www.hotelbeds.com/) SOAP API to search for and book hotel rooms.
 
 ## Installation
@@ -17,6 +19,8 @@ Manually, via command line:
     client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
     search = HotelBeds::Model::Search.new(check_in_date: Date.today, check_out_date: Date.today + 1.day, rooms: [{ adult_count: 2 }], destination: "SYD")
     response = client.perform(search)
+    puts response.results
+    # => [<HotelBeds::Model::Hotel>, <HotelBeds::Model::Hotel>]
 
 ## Contributing
 

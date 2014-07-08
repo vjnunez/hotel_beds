@@ -19,6 +19,11 @@ module HotelBeds
           the contents of the <message> element, the #namespace should be \
           included as a key"
       end
+      
+      def parse_response(response)
+        raise NotImplementedError, "#parse_response should accept a SOAP \ 
+          response and return a HotelBeds::Response::Base subclass object"
+      end
     end
   end
 end

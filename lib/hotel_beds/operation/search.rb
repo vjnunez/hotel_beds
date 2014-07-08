@@ -1,4 +1,5 @@
 require "hotel_beds/operation/base"
+require "hotel_beds/response/search"
 
 module HotelBeds
   module Operation
@@ -20,6 +21,10 @@ module HotelBeds
           Destination: destination,
           OccupancyList: occupancy_list
         } }
+      end
+      
+      def parse_response(response)
+        HotelBeds::Response::Search.new(response)
       end
       
       private
