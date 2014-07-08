@@ -31,4 +31,20 @@ RSpec.describe "performing a hotel search" do
       expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
     end
   end
+  
+  describe "#current_page" do
+    subject { response.current_page }
+
+    it "should return '1'" do
+      expect(subject).to eq(1)
+    end
+  end
+  
+  describe "#total_pages" do
+    subject { response.total_pages }
+
+    it "should be greater or equal to current page" do
+      expect(subject).to be >= response.current_page
+    end
+  end
 end
