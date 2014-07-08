@@ -9,6 +9,7 @@ module HotelBeds
       attribute :description, String
       attribute :board, String
       attribute :price, BigDecimal
+      attribute :currency, String
     end
   end
 end

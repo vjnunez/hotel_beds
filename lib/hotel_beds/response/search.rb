@@ -29,7 +29,8 @@ module HotelBeds
                     id: room.attribute("SHRUI").value,
                     description: room.css("RoomType").first.content,
                     board: room.css("Board").first.content,
-                    price: room.css("Price Amount").first.content
+                    price: room.css("Price Amount").first.content,
+                    currency: body.css("Currency").first.attribute("code").value
                   })
                 }
               })
