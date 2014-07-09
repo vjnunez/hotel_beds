@@ -27,11 +27,11 @@ module HotelBeds
       end
       
       def current_page
-        Integer(body.css("PaginationData").attr("currentPage").value)
+        Integer(body.css("PaginationData").first.attr("currentPage"))
       end
       
       def total_pages
-        Integer(body.css("PaginationData").attr("totalPages").value)
+        Integer(body.css("PaginationData").first.attr("totalPages"))
       end
       
       def hotels
@@ -40,13 +40,16 @@ module HotelBeds
             id: hotel.css("HotelInfo Code").first.content,
             name: hotel.css("HotelInfo Name").first.content,
             images: hotel.css("HotelInfo ImageList Image Url").map(&:content),
-            latitude: hotel.css("HotelInfo Position").attr("latitude").value,
-            longitude: hotel.css("HotelInfo Position").attr("longitude").value,
+            latitude: hotel.css("HotelInfo Position").first.attr("latitude"),
+            longitude: hotel.css("HotelInfo Position").first.attr("longitude"),
             results: hotel.css("AvailableRoom").map { |result|
               {
+                adult_count: result.css("HotelOccupancy AdultCount").first.content,
+                child_count: result.css("HotelOccupancy ChildCount").first.content,
                 rooms: result.css("HotelRoom").map { |room|
                   {
-                    id: room.attribute("SHRUI").value,
+                    number_available: room.attr("availCount"),
+                    id: room.attr("SHRUI"),
                     description: room.css("RoomType").first.content,
                     board: room.css("Board").first.content,
                     price: room.css("Price Amount").first.content,

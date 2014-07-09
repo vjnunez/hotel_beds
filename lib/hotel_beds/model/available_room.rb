@@ -8,6 +8,8 @@ module HotelBeds
     
       # attributes
       attribute :rooms, Array[HotelRoom]
+      attribute :adult_count, Integer
+      attribute :child_count, Integer
     end
   end
 end

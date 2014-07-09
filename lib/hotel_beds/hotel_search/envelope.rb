@@ -10,10 +10,24 @@ module HotelBeds
           CheckInDate: check_in_date,
           CheckOutDate: check_out_date,
           OccupancyList: occupancy_list
-        }.merge(Hash(destination)).merge(Hash(hotels))
+        }.merge(Hash(destination)).merge(Hash(hotels)).merge(Hash(extra_params))
       end
       
       private
+      def extra_params
+        { ExtraParamList: {
+          ExtendedData: [{
+            :@type => "EXT_ADDITIONAL_PARAM",
+            :Name => "PARAM_KEY_PRICE_BREAKDOWN",
+            :Value => "Y"
+          }, {
+            :@type => "EXT_ORDER",
+            :Name => "ORDER_CONTRACT_PRICE",
+            :Value => "ASC"
+          }]
+        } }
+      end
+      
       def pagination_data
         { :@pageNumber => Integer(page_number) }
       end
