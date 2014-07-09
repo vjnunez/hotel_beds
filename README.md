@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/platformq/hotel_beds.png)](https://codeclimate.com/github/platformq/hotel_beds) [![Codeship Status](https://www.codeship.io/projects/808271e0-e973-0131-1052-5240ebfefa5a/status)](https://www.codeship.io/projects/26188)
+[![Codeship Status](https://www.codeship.io/projects/808271e0-e973-0131-1052-5240ebfefa5a/status)](https://www.codeship.io/projects/26188) [![Code Climate](https://codeclimate.com/github/platformq/hotel_beds.png)](https://codeclimate.com/github/platformq/hotel_beds) [![Code Climate](https://codeclimate.com/github/platformq/hotel_beds/coverage.png)](https://codeclimate.com/github/platformq/hotel_beds)
 
 The `hotel_beds` gem interfaces with the [HotelBeds.com](http://www.hotelbeds.com/) SOAP API to search for and book hotel rooms.
 
