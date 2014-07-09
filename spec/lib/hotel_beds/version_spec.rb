@@ -1,5 +1,5 @@
 RSpec.describe HotelBeds::VERSION do
   example do
-    expect(subject).to eq("0.0.1")
+    expect(subject).to match(/\A\d+\.\d+\.\d+(\.\d+)?\z/)
   end
 end
