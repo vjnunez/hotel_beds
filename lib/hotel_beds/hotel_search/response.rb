@@ -1,11 +1,31 @@
-require "hotel_beds/response/base"
+require "active_model/errors"
 require "hotel_beds/model/hotel"
-require "hotel_beds/model/available_room"
-require "hotel_beds/model/hotel_room"
 
 module HotelBeds
-  module Response
-    class Search < Base
+  module HotelSearch
+    class Response
+      attr_accessor :headers, :body, :errors
+      private :headers=, :body=, :errors=
+      
+      def initialize(response)
+        self.headers = response.header
+        self.body = Nokogiri::XML(response.body.fetch(:get_hotel_valued_avail))
+        self.errors = ActiveModel::Errors.new(self).tap do |errors|
+          if response.http_error?
+            errors.add(:base, "HTTP error")
+          elsif response.soap_fault?
+            errors.add(:base, "SOAP error")
+          elsif !response.success?
+            errors.add(:base, "Request failed")
+          end
+        end
+        freeze
+      end
+      
+      def inspect
+        "<#{self.class.name} headers=#{headers.inspect} body=#{body.inspect}>"
+      end
+      
       def current_page
         Integer(body.css("PaginationData").attr("currentPage").value)
       end
@@ -23,17 +43,17 @@ module HotelBeds
             latitude: hotel.css("HotelInfo Position").attr("latitude").value,
             longitude: hotel.css("HotelInfo Position").attr("longitude").value,
             results: hotel.css("AvailableRoom").map { |result|
-              HotelBeds::Model::AvailableRoom.new({
+              {
                 rooms: result.css("HotelRoom").map { |room|
-                  HotelBeds::Model::HotelRoom.new({
+                  {
                     id: room.attribute("SHRUI").value,
                     description: room.css("RoomType").first.content,
                     board: room.css("Board").first.content,
                     price: room.css("Price Amount").first.content,
                     currency: body.css("Currency").first.attribute("code").value
-                  })
+                  }
                 }
-              })
+              }
             }
           })
         end

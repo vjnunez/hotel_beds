@@ -1,11 +1,12 @@
-require "hotel_beds/model/available_room"
-require "virtus"
+require "hotel_beds/model"
+require_relative "available_room"
 
 module HotelBeds
   module Model
     class Hotel
+      include HotelBeds::Model
+
       # attributes
-      include Virtus.model
       attribute :id, Integer
       attribute :name, String
       attribute :images, Array[String]

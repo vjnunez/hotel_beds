@@ -1,4 +1,5 @@
 require "savon"
+require "securerandom"
 
 module HotelBeds
   class Connection
@@ -11,21 +12,20 @@ module HotelBeds
       freeze
     end
 
-    def perform(operation)
-      message = operation.message
-      message[operation.namespace] = message.fetch(operation.namespace).merge({
+    def call(method:, namespace:, data:)
+      message = { namespace => {
         :@xmlns => "http://www.hotelbeds.com/schemas/2005/06/messages",
         :"@xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
-        :"@xsi:schemaLocation" => "http://www.hotelbeds.com/schemas/2005/06/messages #{operation.namespace}.xsd",
-        :@echoToken => operation.echo_token,
-        :@sessionId => operation.session_id,
+        :"@xsi:schemaLocation" => "http://www.hotelbeds.com/schemas/2005/06/messages #{namespace}.xsd",
+        :@echoToken => SecureRandom.hex[0..15],
+        :@sessionId => SecureRandom.hex[0..15],
         :Credentials => {
           User: configuration.username,
           Password: configuration.password
         }
-      })
+      }.merge(data) }
       # send the call
-      response = client.call(operation.method, {
+      response = client.call(method, {
         soap_action: "",
         attributes: {
           :"xmlns:hb" => "http://axis.frontend.hydra.hotelbeds.com",
@@ -33,8 +33,6 @@ module HotelBeds
         },
         message: message
       })
-      # parse the response
-      operation.parse_response(response)
     end
     
     private

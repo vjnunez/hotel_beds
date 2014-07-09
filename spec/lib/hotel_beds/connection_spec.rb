@@ -18,7 +18,7 @@ RSpec.describe HotelBeds::Connection do
     expect(subject).to be_frozen
   end
   
-  it "should respond to #perform" do
-    expect(subject).to respond_to(:perform)
+  it "should respond to #call" do
+    expect(subject).to respond_to(:call)
   end
 end

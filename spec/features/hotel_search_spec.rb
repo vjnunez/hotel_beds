@@ -13,38 +13,48 @@ RSpec.describe "performing a hotel search" do
   end
   
   let(:search) do
-    HotelBeds::Model::Search.new({
+    client.perform_hotel_search({
       check_in_date: check_in_date,
       check_out_date: check_out_date,
       rooms: [{ adult_count: 2 }],
       destination: "SYD"
     })
   end
-  
-  let(:response) { client.perform(search) }
 
-  describe "#hotels" do
-    subject { response.hotels }
+  describe "#response" do
+    let(:response) { search.response }
 
-    it "should return an array of the hotels available" do
-      expect(subject.to_a).to be_kind_of(Array)
-      expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
+    describe "#errors" do
+      subject { response.errors }
+      
+      it "should be empty" do
+        expect(subject).to be_empty
+      end
     end
-  end
-  
-  describe "#current_page" do
-    subject { response.current_page }
+    
+    describe "#hotels" do
+      subject { response.hotels }
 
-    it "should return '1'" do
-      expect(subject).to eq(1)
+      it "should return an array of the hotels available" do
+        expect(subject.to_a).to be_kind_of(Array)
+        expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
+      end
     end
-  end
   
-  describe "#total_pages" do
-    subject { response.total_pages }
+    describe "#current_page" do
+      subject { response.current_page }
 
-    it "should be greater or equal to current page" do
-      expect(subject).to be >= response.current_page
+      it "should return '1'" do
+        expect(subject).to eq(1)
+      end
+    end
+  
+    describe "#total_pages" do
+      subject { response.total_pages }
+
+      it "should be greater or equal to current page" do
+        expect(subject).to be >= response.current_page
+      end
     end
   end
 end

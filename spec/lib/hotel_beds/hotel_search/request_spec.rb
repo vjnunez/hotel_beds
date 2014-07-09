@@ -1,7 +1,7 @@
-require "hotel_beds/model/search"
+require "hotel_beds/hotel_search/request"
 require "date"
 
-RSpec.describe HotelBeds::Model::Search do
+RSpec.describe HotelBeds::HotelSearch::Request do
   let(:valid_attributes) do
     {
       page_number: 2,

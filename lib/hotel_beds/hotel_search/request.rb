@@ -1,19 +1,17 @@
-require "hotel_beds/model/base"
-require "virtus"
-require "active_model"
+require "hotel_beds/model"
 
 module HotelBeds
-  module Model
-    class Search < Base
-      class Room      
+  module HotelSearch
+    class Request
+      class Room    
+        include HotelBeds::Model
+  
         # attributes
-        include Virtus.model
         attribute :adult_count, Integer, default: 0
         attribute :child_count, Integer, default: 0
         attribute :child_ages, Array[Integer], default: Array.new
-        
+  
         # validation
-        include ActiveModel::Validations
         validates :adult_count, :child_count, numericality: {
           greater_than_or_equal_to: 0,
           less_than_or_equal_to: 4,
@@ -25,6 +23,8 @@ module HotelBeds
           end
         end
       end
+      
+      include HotelBeds::Model
 
       # attributes
       attribute :page_number, Integer, default: 1
@@ -32,6 +32,7 @@ module HotelBeds
       attribute :check_in_date, Date
       attribute :check_out_date, Date
       attribute :destination, String
+      attribute :hotels, Array[Integer]
       attribute :rooms, Array[Room]
       
       # validation

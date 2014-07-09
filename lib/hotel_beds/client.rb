@@ -1,5 +1,6 @@
 require "hotel_beds/configuration"
 require "hotel_beds/connection"
+require "hotel_beds/hotel_search/operation"
 
 module HotelBeds
   class Client
@@ -12,8 +13,12 @@ module HotelBeds
       freeze
     end
     
-    def perform(model)
-      connection.perform(model.to_operation)
+    # builds and performs a hotel search, returning an operation object which
+    # contains both the request and response objects.
+    def perform_hotel_search(*args)
+      HotelSearch::Operation.new(*args).perform(
+        connection: connection
+      )
     end
   end
 end

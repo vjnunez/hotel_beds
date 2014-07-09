@@ -1,30 +1,16 @@
-require "hotel_beds/operation/base"
-require "hotel_beds/response/search"
+require "delegate"
 
 module HotelBeds
-  module Operation
-    class Search < Base
-      def method
-        :getHotelValuedAvail
-      end
-      
-      def namespace
-        :HotelValuedAvailRQ
-      end
-      
-      def message
-        { namespace => {
+  module HotelSearch
+    class Envelope < SimpleDelegator
+      def attributes
+        {
           PaginationData: pagination_data,
           Language: language,
           CheckInDate: check_in_date,
           CheckOutDate: check_out_date,
-          Destination: destination,
           OccupancyList: occupancy_list
-        } }
-      end
-      
-      def parse_response(response)
-        HotelBeds::Response::Search.new(response)
+        }.merge(Hash(destination)).merge(Hash(hotels))
       end
       
       private
@@ -45,7 +31,21 @@ module HotelBeds
       end
 
       def destination
-        { :@code => String(__getobj__.destination).upcase, :@type => "SIMPLE" }
+        if __getobj__.destination
+          { Destination: {
+            :@code => String(__getobj__.destination).upcase,
+            :@type => "SIMPLE"
+          } }
+        end
+      end
+      
+      def hotels
+        if Array(__getobj__.hotels).any?
+          { HotelCodeList: {
+            :@withinResults => "Y",
+            :ProductCode => Array(__getobj__.hotels)
+          } }
+        end
       end
       
       def occupancy_list
@@ -56,7 +56,7 @@ module HotelBeds
               AdultCount: Integer(room.adult_count),
               ChildCount: Integer(room.child_count)
             },
-            GuestList: room.child_ages.each { |age|
+            GuestList: Array(room.child_ages).each { |age|
               { Customer: { :@type => "CH", :Age => Integer(age) } }
             }
           } }
