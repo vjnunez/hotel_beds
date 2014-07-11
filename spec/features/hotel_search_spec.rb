@@ -1,28 +1,27 @@
 require "hotel_beds"
 
 RSpec.describe "performing a hotel search" do
-  let(:check_in_date) { Date.today + 28 + rand(10) }
-  let(:check_out_date) { check_in_date + rand(3) + 1 }
-  let(:client) do
-    HotelBeds::Client.new({
-      endpoint: :test,
-      username: ENV.fetch("HOTEL_BEDS_USERNAME"),
-      password: ENV.fetch("HOTEL_BEDS_PASSWORD"),
-      proxy: ENV.fetch("HOTEL_BEDS_PROXY", nil)
-    })
-  end
-  
-  let(:search) do
-    client.perform_hotel_search({
-      check_in_date: check_in_date,
-      check_out_date: check_out_date,
-      rooms: [{ adult_count: 2 }],
-      destination: "SYD"
-    })
-  end
-
   describe "#response" do
-    let(:response) { search.response }
+    before(:all) do
+      @client = HotelBeds::Client.new({
+        endpoint: :test,
+        username: ENV.fetch("HOTEL_BEDS_USERNAME"),
+        password: ENV.fetch("HOTEL_BEDS_PASSWORD"),
+        proxy: ENV.fetch("HOTEL_BEDS_PROXY", nil)
+      })
+      @check_in_date = Date.today + 28 + rand(10)
+      @check_out_date = @check_in_date + rand(3) + 1
+      @response = @client.perform_hotel_search({
+        check_in_date: @check_in_date,
+        check_out_date: @check_out_date,
+        rooms: [{ adult_count: 2 }],
+        destination: "SYD"
+      }).response
+    end
+
+    let(:check_in_date) { @check_in_date }
+    let(:check_out_date) { @check_out_date }
+    let(:response) { @response }
 
     describe "#errors" do
       subject { response.errors }
@@ -38,6 +37,16 @@ RSpec.describe "performing a hotel search" do
       it "should return an array of the hotels available" do
         expect(subject.to_a).to be_kind_of(Array)
         expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
+      end
+      
+      it "should parse the rates correctly" do
+        room = subject.first.results.first.rooms.first
+        expect(room.price).to eq(room.rates.values.inject(:+))
+      end
+      
+      it "should have the same number of rates as nights reuqested" do
+        room = subject.first.results.first.rooms.first
+        expect(room.rates.size).to eq(check_out_date - check_in_date)
       end
     end
   

@@ -23,7 +23,7 @@ module HotelBeds
       end
       
       def inspect
-        "<#{self.class.name} headers=#{headers.inspect} body=#{body.inspect}>"
+        "<#{self.class.name} headers=#{headers.inspect} body=#{body.to_s}>"
       end
       
       def current_page
@@ -42,23 +42,47 @@ module HotelBeds
             images: hotel.css("HotelInfo ImageList Image Url").map(&:content),
             latitude: hotel.css("HotelInfo Position").first.attr("latitude"),
             longitude: hotel.css("HotelInfo Position").first.attr("longitude"),
-            results: hotel.css("AvailableRoom").map { |result|
-              {
-                adult_count: result.css("HotelOccupancy AdultCount").first.content,
-                child_count: result.css("HotelOccupancy ChildCount").first.content,
-                rooms: result.css("HotelRoom").map { |room|
-                  {
-                    number_available: room.attr("availCount"),
-                    id: room.attr("SHRUI"),
-                    description: room.css("RoomType").first.content,
-                    board: room.css("Board").first.content,
-                    price: room.css("Price Amount").first.content,
-                    currency: body.css("Currency").first.attribute("code").value
-                  }
-                }
-              }
-            }
+            results: parse_available_rooms(hotel.css("AvailableRoom"))
           })
+        end
+      end
+      
+      private
+      
+      def parse_available_rooms(rooms)
+        Array(rooms).map do |room|
+          {
+            adult_count: room.css("HotelOccupancy AdultCount").first.content,
+            child_count: room.css("HotelOccupancy ChildCount").first.content,
+            rooms: parse_hotel_rooms(room.css("HotelRoom"))
+          }
+        end
+      end
+
+      def parse_hotel_rooms(rooms)
+        Array(rooms).map do |room|
+          {
+            number_available: room.attr("availCount"),
+            id: room.attr("SHRUI"),
+            description: room.css("RoomType").first.content,
+            board: room.css("Board").first.content,
+            price: room.css("Price Amount").first.content,
+            currency: body.css("Currency").first.attribute("code").value,
+            rates: parse_price_list(room.css("PriceList Price"))
+          }
+        end
+      end
+
+      def parse_price_list(prices)
+        Array(prices).inject({}) do |result, price|
+          from = Date.parse(price.css("DateTimeFrom").first.attr("date"))
+          to = Date.parse(price.css("DateTimeTo").first.attr("date"))
+          dates = (from..to).to_a
+          amount = BigDecimal.new(price.css("Amount").first.content) / dates.size
+          dates.each do |date|
+            result.merge!(date => amount)
+          end
+          result
         end
       end
     end
