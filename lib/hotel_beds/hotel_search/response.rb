@@ -37,23 +37,22 @@ module HotelBeds
       def hotels
         body.css("ServiceHotel").lazy.map do |hotel|
           HotelBeds::Model::Hotel.new({
-            id: hotel.css("HotelInfo Code").first.content,
-            name: hotel.css("HotelInfo Name").first.content,
+            id: hotel.at_css("HotelInfo Code").content,
+            name: hotel.at_css("HotelInfo Name").content,
             images: hotel.css("HotelInfo ImageList Image Url").map(&:content),
-            latitude: hotel.css("HotelInfo Position").first.attr("latitude"),
-            longitude: hotel.css("HotelInfo Position").first.attr("longitude"),
+            latitude: hotel.at_css("HotelInfo Position").attr("latitude"),
+            longitude: hotel.at_css("HotelInfo Position").attr("longitude"),
             results: parse_available_rooms(hotel.css("AvailableRoom"))
           })
         end
       end
       
       private
-      
       def parse_available_rooms(rooms)
         Array(rooms).map do |room|
           {
-            adult_count: room.css("HotelOccupancy AdultCount").first.content,
-            child_count: room.css("HotelOccupancy ChildCount").first.content,
+            adult_count: room.at_css("HotelOccupancy AdultCount").content,
+            child_count: room.at_css("HotelOccupancy ChildCount").content,
             rooms: parse_hotel_rooms(room.css("HotelRoom"))
           }
         end
@@ -64,21 +63,21 @@ module HotelBeds
           {
             number_available: room.attr("availCount"),
             id: room.attr("SHRUI"),
-            description: room.css("RoomType").first.content,
-            board: room.css("Board").first.content,
-            price: room.css("Price Amount").first.content,
-            currency: body.css("Currency").first.attribute("code").value,
-            rates: parse_price_list(room.css("PriceList Price"))
+            description: room.at_css("RoomType").content,
+            board: room.at_css("Board").content,
+            price: ((room > "Price") > "Amount").first.content,
+            currency: body.at_css("Currency").attr("code"),
+            rates: parse_price_list(room.css("Price PriceList Price"))
           }
         end
       end
 
       def parse_price_list(prices)
         Array(prices).inject({}) do |result, price|
-          from = Date.parse(price.css("DateTimeFrom").first.attr("date"))
-          to = Date.parse(price.css("DateTimeTo").first.attr("date"))
+          from = Date.parse(price.at_css("DateTimeFrom").attr("date"))
+          to = Date.parse(price.at_css("DateTimeTo").attr("date"))
           dates = (from..to).to_a
-          amount = BigDecimal.new(price.css("Amount").first.content) / dates.size
+          amount = BigDecimal.new(price.at_css("Amount").content, 3)
           dates.each do |date|
             result.merge!(date => amount)
           end

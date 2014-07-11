@@ -10,7 +10,7 @@ RSpec.describe "performing a hotel search" do
         proxy: ENV.fetch("HOTEL_BEDS_PROXY", nil)
       })
       @check_in_date = Date.today + 28 + rand(10)
-      @check_out_date = @check_in_date + rand(3) + 1
+      @check_out_date = @check_in_date + rand(3) + rand(2) + 1
       @response = @client.perform_hotel_search({
         check_in_date: @check_in_date,
         check_out_date: @check_out_date,
@@ -44,7 +44,7 @@ RSpec.describe "performing a hotel search" do
         expect(room.price).to eq(room.rates.values.inject(:+))
       end
       
-      it "should have the same number of rates as nights reuqested" do
+      it "should have the same number of rates as nights requested" do
         room = subject.first.results.first.rooms.first
         expect(room.rates.size).to eq(check_out_date - check_in_date)
       end
