@@ -36,6 +36,7 @@ RSpec.describe "performing a hotel search" do
 
       it "should return an array of the hotels available" do
         expect(subject.to_a).to be_kind_of(Array)
+        expect(subject.to_a).to_not be_empty
         expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
       end
       

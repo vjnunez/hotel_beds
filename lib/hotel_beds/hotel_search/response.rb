@@ -18,20 +18,35 @@ module HotelBeds
           elsif !response.success?
             errors.add(:base, "Request failed")
           end
+
+          body.css("ErrorList Error").each do |error|
+            errors.add(:base, [
+              (m = error.at_css("Message") && m.content),
+              (dm = error.at_css("DetailedMessage") && dm.content)
+            ].compact.join("\n"))
+          end
         end
         freeze
       end
       
       def inspect
-        "<#{self.class.name} headers=#{headers.inspect} body=#{body.to_s}>"
+        "<#{self.class.name} errors=#{errors.inspect} headers=#{headers.inspect} body=#{body.to_s}>"
       end
       
       def current_page
-        Integer(body.at_css("PaginationData").attr("currentPage"))
+        if data = pagination_data
+          Integer(data.attr("currentPage"))
+        else
+          0
+        end
       end
       
       def total_pages
-        Integer(body.at_css("PaginationData").attr("totalPages"))
+        if data = pagination_data
+          Integer(data.attr("totalPages"))
+        else
+          0
+        end
       end
       
       def hotels
@@ -48,6 +63,10 @@ module HotelBeds
       end
       
       private
+      def pagination_data
+        body.at_css("PaginationData")
+      end
+          
       def parse_available_rooms(rooms)
         Array(rooms).map do |room|
           {
