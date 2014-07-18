@@ -27,11 +27,11 @@ module HotelBeds
       end
       
       def current_page
-        Integer(body.css("PaginationData").first.attr("currentPage"))
+        Integer(body.at_css("PaginationData").attr("currentPage"))
       end
       
       def total_pages
-        Integer(body.css("PaginationData").first.attr("totalPages"))
+        Integer(body.at_css("PaginationData").attr("totalPages"))
       end
       
       def hotels
