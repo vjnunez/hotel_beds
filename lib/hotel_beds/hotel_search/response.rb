@@ -21,8 +21,8 @@ module HotelBeds
 
           body.css("ErrorList Error").each do |error|
             errors.add(:base, [
-              (m = error.at_css("Message") && m.content),
-              (dm = error.at_css("DetailedMessage") && dm.content)
+              (sm = error.at_css("Message")) && sm.content,
+              (dm = error.at_css("DetailedMessage")) && dm.content
             ].compact.join("\n"))
           end
         end
