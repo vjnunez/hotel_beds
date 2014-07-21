@@ -19,7 +19,7 @@ RSpec.describe "performing a grouped hotel search" do
           { adult_count: 1, child_count: 1, child_ages: [rand(17)] }
         ],
         destination: "SYD",
-        grouped_results: true
+        group_results: true
       })
       if @operation.errors.any?
         raise StandardError, @operation.errors.full_messages.join("\n")

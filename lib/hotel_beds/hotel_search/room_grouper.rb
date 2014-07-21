@@ -5,33 +5,29 @@ module HotelBeds
   module HotelSearch
     class RoomGrouper < Struct.new(:requested_rooms, :response_rooms)
       def results
-        @results ||= grouped_rooms.map do |rooms|
-          HotelBeds::Model::SearchResult.new(rooms: Array(rooms))
-        end
-      end
-
-      private
-      def grouped_rooms
         if requested_rooms.size == 1
-          response_rooms
+          response_rooms.map { |room| [room] }
         else
           combined_available_rooms
         end
       end
 
+      private
       # returns an array of room combinations for all rooms
       def combined_available_rooms
-        head, *rest = combine_available_rooms_by_occupants.values
-        head.product(*rest)
+        room_groups = combine_available_rooms_by_occupants.values
+        head, *rest = room_groups
+        head.product(*rest).map { |rooms| rooms.flatten.sort_by(&:id) }.uniq
       end
 
       # returns a hash of OK => RSRG
       def combine_available_rooms_by_occupants
         group_requested_room_count_by_occupants.to_a.inject(Hash.new) do |result, (key, count)|
           result[key] = group_rooms_by_occupants.fetch(key).combination(count).to_a
+          result
         end
       rescue KeyError => e
-        Array.new
+        Hash.new
       end
 
       # returns a hash of OK => RC
@@ -59,8 +55,8 @@ module HotelBeds
       # returns an OK for a given room
       def occupant_key(room)
         {
-          adult_count: room.fetch(:adult_count),
-          child_count: room.fetch(:child_count)
+          adult_count: room.adult_count,
+          child_count: room.child_count
         }
       end
     end

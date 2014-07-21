@@ -73,11 +73,10 @@ module HotelBeds
       def generate_results(rooms)
         parsed_rooms = parse_available_rooms(rooms)
         if request.group_results?
-          RoomGrouper.new(request.rooms.map(&:attributes), parsed_rooms).results
-        else
-          parsed_rooms.map do |rooms|
-            HotelBeds::Model::SearchResult.new(rooms: Array(rooms))
-          end
+          parsed_rooms = RoomGrouper.new(request.rooms, parsed_rooms).results
+        end
+        parsed_rooms.map do |rooms|
+          HotelBeds::Model::SearchResult.new(rooms: Array(rooms))
         end
       end
 
