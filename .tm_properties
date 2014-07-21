@@ -1,0 +1,5 @@
+exclude = '{$exclude,tmp,pkg,Gemfile.lock,*.gem}'
+TM_STRIP_WHITESPACE_ON_SAVE = true
+
+tabSize = 2
+softTabs = true
