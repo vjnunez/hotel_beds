@@ -5,6 +5,7 @@ module HotelBeds
   module Model
     def self.included(base)
       base.class_eval do
+        include Comparable
         include Virtus.model
         include ActiveModel::Validations
       end

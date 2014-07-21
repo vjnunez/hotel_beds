@@ -18,7 +18,7 @@ Manually, via command line:
 
     # create the connection to HotelBeds
     client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
-    
+
     # perform the search
     search = client.perform_hotel_search({
       check_in_date: Date.today,
@@ -26,7 +26,7 @@ Manually, via command line:
       rooms: [{ adult_count: 2 }],
       destination: "SYD"
     })
-    
+
     # inspect the response
     puts search.response.hotels
     # => [<HotelBeds::Model::Hotel>, <HotelBeds::Model::Hotel>]
@@ -34,6 +34,24 @@ Manually, via command line:
     # => 10
     puts search.response.current_page
     # => 1
+
+### Options
+
+The HotelBeds API will return individual rooms, rather than being grouped by what you searched for (e.g. 2 rooms, 1 with 2 adults, 1 with 1 adult and 1 child). To fix this issue, you can enable result grouping by adding `group_results: true` to the `perform_hotel_search` call.
+
+Example:
+
+    # perform the search
+    search = client.perform_hotel_search({
+      check_in_date: Date.today,
+      check_out_date: Date.today + 1,
+      rooms: [
+        { adult_count: 2 },
+        { adult_count: 1, child_count: 1, child_ages: [7] }
+      ],
+      destination: "SYD",
+      group_results: true
+    })
 
 ## Contributing
 

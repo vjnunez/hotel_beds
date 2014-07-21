@@ -12,7 +12,7 @@ module HotelBeds
           OccupancyList: occupancy_list
         }.merge(Hash(destination)).merge(Hash(hotels)).merge(Hash(extra_params))
       end
-      
+
       private
       def extra_params
         { ExtraParamList: {
@@ -27,7 +27,7 @@ module HotelBeds
           }]
         } }
       end
-      
+
       def pagination_data
         { :@pageNumber => Integer(page_number) }
       end
@@ -52,7 +52,7 @@ module HotelBeds
           } }
         end
       end
-      
+
       def hotels
         if Array(__getobj__.hotels).any?
           { HotelCodeList: {
@@ -61,20 +61,22 @@ module HotelBeds
           } }
         end
       end
-      
+
       def occupancy_list
-        Array(rooms).map do |room|
-          { HotelOccupancy: {
-            RoomCount: Integer(room.adult_count) + Integer(room.child_count),
-            Occupancy: {
+        { HotelOccupancy: Array(rooms).map { |room|
+          guest_list = if room.child_count > 0
+            { GuestList: { Customer: Array(room.child_ages).map { |age|
+              { :@type => "CH", :Age => Integer(age) }
+            } } }
+          end
+          {
+            RoomCount: 1,
+            Occupancy: (guest_list || Hash.new).merge({
               AdultCount: Integer(room.adult_count),
               ChildCount: Integer(room.child_count)
-            },
-            GuestList: Array(room.child_ages).each { |age|
-              { Customer: { :@type => "CH", :Age => Integer(age) } }
-            }
-          } }
-        end
+            })
+          }
+        } }
       end
     end
   end

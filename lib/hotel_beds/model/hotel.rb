@@ -1,5 +1,5 @@
 require "hotel_beds/model"
-require_relative "available_room"
+require_relative "search_result"
 
 module HotelBeds
   module Model
@@ -13,7 +13,7 @@ module HotelBeds
       attribute :stars, Integer
       attribute :longitude, BigDecimal
       attribute :latitude, BigDecimal
-      attribute :results, Array[AvailableRoom]
+      attribute :results, Array[SearchResult]
     end
   end
 end

@@ -7,14 +7,14 @@ module HotelBeds
     class Operation
       attr_accessor :request, :response, :errors
       private :request=, :response=, :errors=
-      
+
       def initialize(*args)
         self.request = Request.new(*args)
       end
-      
+
       def perform(connection:)
         if request.valid?
-          self.response = Response.new(retrieve(connection))
+          self.response = Response.new(request, retrieve(connection))
           self.errors = response.errors
         else
           self.errors = request.errors
@@ -22,11 +22,11 @@ module HotelBeds
         freeze
         self
       end
-      
+
       private
       def retrieve(connection)
         connection.call({
-          method: :getHotelValuedAvail, 
+          method: :getHotelValuedAvail,
           namespace: :HotelValuedAvailRQ,
           data: Envelope.new(request).attributes
         })

@@ -3,14 +3,14 @@ require "hotel_beds/model"
 module HotelBeds
   module HotelSearch
     class Request
-      class Room    
+      class Room
         include HotelBeds::Model
-  
+
         # attributes
         attribute :adult_count, Integer, default: 0
         attribute :child_count, Integer, default: 0
         attribute :child_ages, Array[Integer], default: Array.new
-  
+
         # validation
         validates :adult_count, :child_count, numericality: {
           greater_than_or_equal_to: 0,
@@ -23,7 +23,7 @@ module HotelBeds
           end
         end
       end
-      
+
       include HotelBeds::Model
 
       # attributes
@@ -34,7 +34,8 @@ module HotelBeds
       attribute :destination, String
       attribute :hotels, Array[Integer]
       attribute :rooms, Array[Room]
-      
+      attribute :group_results, Virtus::Attribute::Boolean, default: false
+
       # validation
       validates :language, :destination, length: { is: 3 }
       validates :check_in_date, :check_out_date, presence: true
