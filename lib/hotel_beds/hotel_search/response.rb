@@ -76,7 +76,10 @@ module HotelBeds
           parsed_rooms = RoomGrouper.new(request.rooms, parsed_rooms).results
         end
         parsed_rooms.map do |rooms|
-          HotelBeds::Model::SearchResult.new(rooms: Array(rooms))
+          HotelBeds::Model::SearchResult.new({
+            rooms: Array(rooms),
+            currency: body.at_css("Currency").attr("code")
+          })
         end
       end
 
@@ -89,7 +92,6 @@ module HotelBeds
             number_available: room.at_css("HotelRoom").attr("availCount"),
             description: room.at_css("HotelRoom RoomType").content,
             board: room.at_css("HotelRoom Board").content,
-            currency: body.at_css("Currency").attr("code"),
             price: ((room.at_css("HotelRoom") > "Price") > "Amount").first.content,
             rates: parse_price_list(room.css("Price PriceList Price"))
           })

@@ -14,6 +14,11 @@ module HotelBeds
       def <=>(other)
         rooms.map(&:id).sort == other.rooms.map(&:id).sort
       end
+
+      # returns the total price of all the rooms collectively
+      def price
+        rooms.map(&:price).inject(BigDecimal.new("0.0"), :+)
+      end
     end
   end
 end
