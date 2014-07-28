@@ -16,24 +16,48 @@ Manually, via command line:
 
 ## Usage
 
-    # create the connection to HotelBeds
-    client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
+```ruby
+# create the connection to HotelBeds
+client = HotelBeds::Client.new(endpoint: :test, username: "user", password: "pass")
 
-    # perform the search
-    search = client.perform_hotel_search({
-      check_in_date: Date.today,
-      check_out_date: Date.today + 1,
-      rooms: [{ adult_count: 2 }],
-      destination: "SYD"
-    })
+# perform the search
+search = client.perform_hotel_search({
+  check_in_date: Date.today,
+  check_out_date: Date.today + 1,
+  rooms: [{ adult_count: 2 }],
+  destination: "SYD"
+})
 
-    # inspect the response
-    puts search.response.hotels
-    # => [<HotelBeds::Model::Hotel>, <HotelBeds::Model::Hotel>]
-    puts search.response.total_pages
-    # => 10
-    puts search.response.current_page
-    # => 1
+# inspect the response
+puts search.response.hotels
+# => [<HotelBeds::Model::Hotel>, <HotelBeds::Model::Hotel>]
+puts search.response.total_pages
+# => 10
+puts search.response.current_page
+# => 1
+
+# place a booking
+booking = client.perform_hotel_booking({
+  room_ids: [search.response.hotels.first.results.first.id],
+  people: [
+    { title: "Mr", name: "David Smith", type: :adult },
+    { title: "Mrs", name: "Jane Smith", type: :adult }
+  ],
+  address: {
+    line_1: "123 Some Street",
+    city: "Townsville",
+    state: "New Statestown",
+    postcode: "NS1 1AB"
+    country: "UK"
+  },
+  phone_number: "+44 1234 567 890",
+  email: "david.smith@example.com"
+})
+
+# inspect the response
+puts booking.response.reference
+# => "ABC-123"
+```
 
 ### Options
 
@@ -41,17 +65,19 @@ The HotelBeds API will return individual rooms, rather than being grouped by wha
 
 Example:
 
-    # perform the search
-    search = client.perform_hotel_search({
-      check_in_date: Date.today,
-      check_out_date: Date.today + 1,
-      rooms: [
-        { adult_count: 2 },
-        { adult_count: 1, child_count: 1, child_ages: [7] }
-      ],
-      destination: "SYD",
-      group_results: true
-    })
+```ruby
+# perform the search
+search = client.perform_hotel_search({
+  check_in_date: Date.today,
+  check_out_date: Date.today + 1,
+  rooms: [
+    { adult_count: 2 },
+    { adult_count: 1, child_count: 1, child_ages: [7] }
+  ],
+  destination: "SYD",
+  group_results: true
+})
+```
 
 ## Contributing
 
