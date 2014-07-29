@@ -18,11 +18,6 @@ module HotelBeds
       attribute :rates, Hash[Date => BigDecimal]
       attribute :cancellation_policies, Array[CancellationPolicy],
         default: Array.new
-
-      # compare based on id
-      def <=>(other)
-        id == other.id && !id.nil?
-      end
     end
   end
 end
