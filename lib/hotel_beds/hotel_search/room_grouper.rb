@@ -14,7 +14,8 @@ module HotelBeds
 
       private
       def unique_room_combinations
-        unique_combinations(expand_combinations(available_room_combinations))
+        combinations = build_combinations(room_options_grouped_by_occupants)
+        unique_combinations(expand_combinations(combinations))
       end
 
       def unique_combinations(combinations)
@@ -33,8 +34,8 @@ module HotelBeds
       end
 
       # returns an array of room combinations for all rooms
-      def available_room_combinations
-        head, *rest = room_options_grouped_by_occupants
+      def build_combinations(combinations)
+        head, *rest = combinations
         Array(head).product(*rest)
       end
 
