@@ -45,6 +45,12 @@ RSpec.describe "performing a hotel search" do
         expect(room_counts.to_a.flatten.uniq).to eq([1])
       end
 
+      it "should have an availability token" do
+        subject.each do |hotel|
+          expect(hotel.availability_token).to be_present
+        end
+      end
+
       it "should have a contract name" do
         subject.each do |hotel|
           expect(hotel.contract_name).to be_present

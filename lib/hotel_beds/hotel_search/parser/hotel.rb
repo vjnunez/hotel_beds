@@ -23,6 +23,7 @@ module HotelBeds
 
         def call
           HotelBeds::Model::Hotel.new({
+            availability_token: hotel.attr("availToken"),
             id: hotel.at_css("HotelInfo Code").content,
             name: hotel.at_css("HotelInfo Name").content,
             images: hotel.css("HotelInfo ImageList Image Url").map(&:content),
