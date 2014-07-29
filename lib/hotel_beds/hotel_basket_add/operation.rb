@@ -3,7 +3,7 @@ require_relative "response"
 require_relative "envelope"
 
 module HotelBeds
-  module BasketAdd
+  module HotelBasketAdd
     class Operation
       attr_accessor :request, :response, :errors
       private :request=, :response=, :errors=

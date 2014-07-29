@@ -4,11 +4,7 @@ module HotelBeds
     module Parser
       class RoomGrouper < Struct.new(:requested_rooms, :response_rooms)
         def results
-          if requested_rooms.size == 1
-            response_rooms.map { |room| [room] }
-          else
-            unique_room_combinations
-          end
+          unique_room_combinations
         end
 
         private
@@ -24,8 +20,13 @@ module HotelBeds
         def expand_combinations(combinations)
           combinations.map do |rooms|
             rooms.inject(Array.new) do |result, room|
-              1.upto(room.room_count) do
-                result << room.dup.tap { |r| r.room_count = 1 }
+              # get an array of all the child ages
+              child_ages = requested_rooms_child_ages_by_occupants.fetch(occupant_key(room))
+              1.upto(room.room_count) do |i|
+                result << room.dup.tap do |r|
+                  r.room_count = 1
+                  r.child_ages = child_ages.pop
+                end
               end
               result
             end
@@ -50,13 +51,30 @@ module HotelBeds
           Array.new
         end
 
-        # returns a hash of OK => 1 (count)
-        def requested_room_count_by_occupants
+        # returns a hash of OK => [Integer]
+        def requested_rooms_child_ages_by_occupants
           requested_rooms.inject(Hash.new) do |result, room|
             key = occupant_key(room)
-            result[key] ||= 0
-            result[key] += 1
+            result[key] ||= Array.new
+            result[key] += room.child_ages
             result
+          end
+        end
+
+        # returns a hash of OK => [RR]
+        def requested_rooms_by_occupants
+          requested_rooms.inject(Hash.new) do |result, room|
+            key = occupant_key(room)
+            result[key] ||= Array.new
+            result[key] << room
+            result
+          end
+        end
+
+        # returns a hash of OK => 1 (count)
+        def requested_room_count_by_occupants
+          requested_rooms_by_occupants.inject(Hash.new) do |result, (key, rooms)|
+            result.merge(key => rooms.size)
           end
         end
 

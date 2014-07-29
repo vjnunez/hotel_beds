@@ -1,18 +1,17 @@
-require "hotel_beds/model"
-require_relative "cancellation_policy"
+require "hotel_beds/model/room"
+require "hotel_beds/model/cancellation_policy"
 
 module HotelBeds
   module Model
-    class AvailableRoom
-      include HotelBeds::Model
-
+    class AvailableRoom < Room
       # attributes
       attribute :id, Integer
       attribute :room_count, Integer
-      attribute :adult_count, Integer
-      attribute :child_count, Integer
       attribute :description, String
       attribute :board, String
+      attribute :board_code, String
+      attribute :room_type_code, String
+      attribute :room_type_characteristic, String
       attribute :price, BigDecimal
       attribute :number_available, Integer
       attribute :rates, Hash[Date => BigDecimal]

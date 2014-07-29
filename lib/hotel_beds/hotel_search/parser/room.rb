@@ -26,6 +26,9 @@ module HotelBeds
             number_available: room.at_css("HotelRoom").attr("availCount"),
             description: room.at_css("HotelRoom RoomType").content,
             board: room.at_css("HotelRoom Board").content,
+            board_code: room.at_css("HotelRoom Board").attr("code"),
+            room_type_code: room.at_css("HotelRoom RoomType").attr("code"),
+            room_type_characteristic: room.at_css("HotelRoom RoomType").attr("characteristic"),
             price: ((room.at_css("HotelRoom") > "Price") > "Amount").first.content,
             rates: parse_price_list(room.css("Price PriceList Price"))
           })

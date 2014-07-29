@@ -5,11 +5,12 @@ module HotelBeds
     class Envelope < SimpleDelegator
       def attributes
         {
-          PaginationData: pagination_data,
-          Language: language,
-          CheckInDate: check_in_date,
-          CheckOutDate: check_out_date,
-          OccupancyList: occupancy_list
+          :@sessionId => session_id,
+          :PaginationData => pagination_data,
+          :Language => language,
+          :CheckInDate => check_in_date,
+          :CheckOutDate => check_out_date,
+          :OccupancyList => occupancy_list
         }.merge(Hash(destination)).merge(Hash(hotels)).merge(Hash(extra_params))
       end
 

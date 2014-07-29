@@ -30,6 +30,7 @@ module HotelBeds
             latitude: hotel.at_css("HotelInfo Position").attr("latitude"),
             longitude: hotel.at_css("HotelInfo Position").attr("longitude"),
             results: results,
+            destination_code: hotel.at_css("HotelInfo Destination").attr("code"),
             contract_name: hotel.at_css("ContractList Contract Name").content,
             contract_incoming_office_code: hotel.at_css("ContractList Contract IncomingOffice").attr("code")
           })

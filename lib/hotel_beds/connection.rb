@@ -18,7 +18,6 @@ module HotelBeds
         :"@xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
         :"@xsi:schemaLocation" => "http://www.hotelbeds.com/schemas/2005/06/messages #{namespace}.xsd",
         :@echoToken => SecureRandom.hex[0..15],
-        :@sessionId => SecureRandom.hex[0..15],
         :Credentials => {
           User: configuration.username,
           Password: configuration.password
@@ -34,7 +33,7 @@ module HotelBeds
         message: message
       })
     end
-    
+
     private
     def initialize_client
       Savon::Client.new do |config|

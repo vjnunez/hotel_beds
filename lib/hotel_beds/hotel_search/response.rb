@@ -20,6 +20,10 @@ module HotelBeds
         "<#{self.class.name} errors=#{errors.inspect} headers=#{headers.inspect} body=#{body.to_s}>"
       end
 
+      def session_id
+        request.session_id
+      end
+
       def current_page
         if data = pagination_data
           Integer(data.attr("currentPage"))

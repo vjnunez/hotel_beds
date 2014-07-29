@@ -7,9 +7,9 @@ RSpec.describe HotelBeds::HotelSearch::Parser::RoomGrouper do
   context "when asking for 3 rooms (2 x 2 adults & 1 x 1 adult, 1 child)" do
     let(:requested_rooms) do
       [
-        double(:requested_room, adult_count: 2, child_count: 0),
-        double(:requested_room, adult_count: 2, child_count: 0),
-        double(:requested_room, adult_count: 1, child_count: 1)
+        double(:requested_room, adult_count: 2, child_count: 0, child_ages: []),
+        double(:requested_room, adult_count: 2, child_count: 0, child_ages: []),
+        double(:requested_room, adult_count: 1, child_count: 1, child_ages: [rand(17)])
       ]
     end
 
@@ -36,7 +36,7 @@ RSpec.describe HotelBeds::HotelSearch::Parser::RoomGrouper do
 
   context "when asking for 1 rooms (1 adult, 1 child)" do
     let(:requested_rooms) do
-      [double(:requested_room, adult_count: 1, child_count: 1)]
+      [double(:requested_room, adult_count: 1, child_count: 1, child_ages: [rand(17)])]
     end
 
     let(:response_rooms) do

@@ -15,6 +15,7 @@ module HotelBeds
       attribute :longitude, BigDecimal
       attribute :latitude, BigDecimal
       attribute :results, Array[SearchResult]
+      attribute :destination_code, String
       attribute :contract_name, String
       attribute :contract_incoming_office_code, String
     end
