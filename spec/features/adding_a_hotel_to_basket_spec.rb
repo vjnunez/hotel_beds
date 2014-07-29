@@ -46,5 +46,13 @@ RSpec.describe "adding a hotel to the basket" do
     it "should be a success" do
       expect(subject).to be_success
     end
+
+    describe "#purchase" do
+      subject { response.purchase }
+
+      it "should have a service" do
+        expect(subject.services).to_not be_empty
+      end
+    end
   end
 end
