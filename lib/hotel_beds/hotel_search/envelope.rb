@@ -63,8 +63,8 @@ module HotelBeds
       end
 
       def occupancy_list
-        rooms = Array(rooms).group_by(&:group_key).values
-        { HotelOccupancy: rooms.map(&method(:build_room)) }
+        grouped_rooms = Array(rooms).group_by(&:group_key).values
+        { HotelOccupancy: grouped_rooms.map(&method(:build_room)) }
       end
 
       def build_room(rooms)
