@@ -19,20 +19,28 @@ module HotelBeds
 
         def call
           ActiveModel::Errors.new(self).tap do |errors|
-            if response.http_error?
-              errors.add(:base, "HTTP error")
-            elsif response.soap_fault?
-              errors.add(:base, "SOAP error")
-            elsif !response.success?
-              errors.add(:base, "Request failed")
-            end
+            apply_response_errors(errors)
+            apply_body_errors(errors)
+          end.freeze
+        end
 
-            body.css("ErrorList Error").each do |error|
-              errors.add(:base, [
-                (sm = error.at_css("Message")) && sm.content,
-                (dm = error.at_css("DetailedMessage")) && dm.content
-              ].compact.join("\n"))
-            end
+        private
+        def apply_response_errors(errors)
+          if response.http_error?
+            errors.add(:base, "HTTP error")
+          elsif response.soap_fault?
+            errors.add(:base, "SOAP error")
+          elsif !response.success?
+            errors.add(:base, "Request failed")
+          end
+        end
+
+        def apply_body_errors(errors)
+          body.css("ErrorList Error").each do |error|
+            errors.add(:base, [
+              (sm = error.at_css("Message")) && sm.content,
+              (dm = error.at_css("DetailedMessage")) && dm.content
+            ].compact.join("\n"))
           end
         end
       end
