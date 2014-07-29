@@ -7,6 +7,7 @@ module HotelBeds
 
       # attributes
       attribute :id, Integer
+      attribute :room_count, Integer
       attribute :adult_count, Integer
       attribute :child_count, Integer
       attribute :description, String

@@ -8,30 +8,50 @@ module HotelBeds
         if requested_rooms.size == 1
           response_rooms.map { |room| [room] }
         else
-          combined_available_rooms
+          unique_room_combinations
         end
       end
 
       private
-      # returns an array of room combinations for all rooms
-      def combined_available_rooms
-        room_groups = combine_available_rooms_by_occupants.values
-        head, *rest = room_groups
-        head.product(*rest).map { |rooms| rooms.flatten.sort_by(&:id) }.uniq
+      def unique_room_combinations
+        unique_combinations(expand_combinations(available_room_combinations))
       end
 
-      # returns a hash of OK => RSRG
-      def combine_available_rooms_by_occupants
-        group_requested_room_count_by_occupants.to_a.inject(Hash.new) do |result, (key, count)|
-          result[key] = group_rooms_by_occupants.fetch(key).combination(count).to_a
-          result
+      def unique_combinations(combinations)
+        combinations.uniq { |r| r.sort_by(&:id).map(&:id) }
+      end
+
+      def expand_combinations(combinations)
+        combinations.map do |rooms|
+          rooms.inject(Array.new) do |result, room|
+            1.upto(room.room_count) do
+              result << room.dup.tap { |r| r.room_count = 1 }
+            end
+            result
+          end
+        end
+      end
+
+      # returns an array of room combinations for all rooms
+      def available_room_combinations
+        head, *rest = room_options_grouped_by_occupants
+        Array(head).product(*rest)
+      end
+
+      # returns a array of arrays, each contains available rooms for a given
+      # room occupancy
+      def room_options_grouped_by_occupants
+        requested_room_count_by_occupants.inject(Array.new) do |result, (key, count)|
+          result << response_rooms_by_occupants.fetch(key).select do |room|
+            room.room_count == count
+          end
         end
       rescue KeyError => e
-        Hash.new
+        Array.new
       end
 
-      # returns a hash of OK => RC
-      def group_requested_room_count_by_occupants
+      # returns a hash of OK => 1 (count)
+      def requested_room_count_by_occupants
         requested_rooms.inject(Hash.new) do |result, room|
           key = occupant_key(room)
           result[key] ||= 0
@@ -40,16 +60,14 @@ module HotelBeds
         end
       end
 
-      # returns a hash of OK => AR
-      def group_rooms_by_occupants
-        @frozen_rooms ||= response_rooms.inject(Hash.new) do |result, room|
+      # returns a hash of OK => [AvailableRoom, AvailableRoom, AvailableRoom]
+      def response_rooms_by_occupants
+        response_rooms.inject(Hash.new) do |result, room|
           key = occupant_key(room)
           result[key] ||= Array.new
-          1.upto([room.number_available, 5].min) do |i|
-            result[key].push(room)
-          end
+          result[key].push(room)
           result
-        end.freeze
+        end
       end
 
       # returns an OK for a given room

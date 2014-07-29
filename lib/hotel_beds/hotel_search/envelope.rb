@@ -63,17 +63,21 @@ module HotelBeds
       end
 
       def occupancy_list
-        { HotelOccupancy: Array(rooms).map { |room|
-          guest_list = if room.child_count > 0
-            { GuestList: { Customer: Array(room.child_ages).map { |age|
-              { :@type => "CH", :Age => Integer(age) }
-            } } }
+        { HotelOccupancy: Array(rooms).group_by(&:group_key).map { |key,rooms|
+          # if any room has children, add the ages
+          guest_list = if rooms.any? { |room| room.child_count > 0 }
+            { GuestList: {
+              Customer: Array(rooms.map(&:child_ages).flatten).map { |age|
+                { :@type => "CH", :Age => Integer(age) }
+              }
+            } }
           end
+          # build the room(s) specification
           {
-            RoomCount: 1,
+            RoomCount: rooms.size,
             Occupancy: (guest_list || Hash.new).merge({
-              AdultCount: Integer(room.adult_count),
-              ChildCount: Integer(room.child_count)
+              AdultCount: Integer(rooms.map(&:adult_count).inject(0, :+)),
+              ChildCount: Integer(rooms.map(&:child_count).inject(0, :+))
             })
           }
         } }

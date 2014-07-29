@@ -87,6 +87,7 @@ module HotelBeds
         Array(rooms).map do |room|
           HotelBeds::Model::AvailableRoom.new({
             id: room.at_css("HotelRoom").attr("SHRUI"),
+            room_count: room.at_css("HotelOccupancy RoomCount").content,
             adult_count: room.at_css("HotelOccupancy AdultCount").content,
             child_count: room.at_css("HotelOccupancy ChildCount").content,
             number_available: room.at_css("HotelRoom").attr("availCount"),

@@ -22,6 +22,10 @@ module HotelBeds
             room.errors.add(:child_ages, "must match quantity of children")
           end
         end
+
+        def group_key
+          { adult_count: adult_count, child_count: child_count }
+        end
       end
 
       include HotelBeds::Model
