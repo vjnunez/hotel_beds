@@ -40,14 +40,21 @@ RSpec.describe "performing a hotel search" do
         expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
       end
 
-      it "should have the same number of rates as nights requested" do
-        room = subject.first.results.first.rooms.first
-        expect(room.rates.size).to eq(check_out_date - check_in_date)
-      end
-
       it "should only have one room per result" do
         room_counts = subject.map { |h| h.results.map { |r| r.rooms.size } }
         expect(room_counts.to_a.flatten.uniq).to eq([1])
+      end
+
+      it "should have a contract name" do
+        subject.each do |hotel|
+          expect(hotel.contract_name).to be_present
+        end
+      end
+
+      it "should have a contract incoming office code" do
+        subject.each do |hotel|
+          expect(hotel.contract_incoming_office_code).to be_present
+        end
       end
 
       describe "#results" do
@@ -56,6 +63,10 @@ RSpec.describe "performing a hotel search" do
 
           it "should parse the rates correctly" do
             expect(subject.price).to eq(subject.rates.values.inject(:+))
+          end
+
+          it "should have the same number of rates as nights requested" do
+            expect(subject.rates.size).to eq(check_out_date - check_in_date)
           end
         end
       end

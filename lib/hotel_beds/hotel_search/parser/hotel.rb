@@ -28,7 +28,9 @@ module HotelBeds
             images: hotel.css("HotelInfo ImageList Image Url").map(&:content),
             latitude: hotel.at_css("HotelInfo Position").attr("latitude"),
             longitude: hotel.at_css("HotelInfo Position").attr("longitude"),
-            results: results
+            results: results,
+            contract_name: hotel.at_css("ContractList Contract Name").content,
+            contract_incoming_office_code: hotel.at_css("ContractList Contract IncomingOffice").attr("code")
           })
         end
 

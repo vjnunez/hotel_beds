@@ -8,12 +8,15 @@ module HotelBeds
 
       # attributes
       attribute :id, Integer
+      attribute :availability_token, String
       attribute :name, String
       attribute :images, Array[String]
       attribute :stars, Integer
       attribute :longitude, BigDecimal
       attribute :latitude, BigDecimal
       attribute :results, Array[SearchResult]
+      attribute :contract_name, String
+      attribute :contract_incoming_office_code, String
     end
   end
 end
