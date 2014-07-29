@@ -100,7 +100,7 @@ module HotelBeds
       end
 
       def parse_price_list(prices)
-        Array(prices).inject({}) do |result, price|
+        Array(prices).inject(Hash.new) do |result, price|
           from = Date.parse(price.at_css("DateTimeFrom").attr("date"))
           to = Date.parse(price.at_css("DateTimeTo").attr("date"))
           dates = (from..to).to_a

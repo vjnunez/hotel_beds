@@ -1,4 +1,5 @@
 require "hotel_beds/model"
+require_relative "cancellation_policy"
 
 module HotelBeds
   module Model
@@ -15,6 +16,8 @@ module HotelBeds
       attribute :price, BigDecimal
       attribute :number_available, Integer
       attribute :rates, Hash[Date => BigDecimal]
+      attribute :cancellation_policies, Array[CancellationPolicy],
+        default: Array.new
 
       # compare based on id
       def <=>(other)
