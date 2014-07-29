@@ -8,7 +8,9 @@ I'm sure you know how to install Ruby gems by now...
 
 In your Gemfile, before a `bundle install`, add:
 
-    gem "hotel_beds", "~> 0.0.1"
+    gem "hotel_beds", "~> X.X.X"
+
+**Note:** you'll need to replace `X.X.X` in the example above with the [latest gem version](https://rubygems.org/gems/hotel_beds) in the badge above.
 
 Manually, via command line:
 
