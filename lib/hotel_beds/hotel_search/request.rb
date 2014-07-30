@@ -10,6 +10,7 @@ module HotelBeds
       # attributes
       attribute :session_id, String, default: SecureRandom.hex[0..15]
       attribute :page_number, Integer, default: 1
+      attribute :items_per_page, Integer, default: 50
       attribute :language, String, default: "ENG"
       attribute :check_in_date, Date
       attribute :check_out_date, Date

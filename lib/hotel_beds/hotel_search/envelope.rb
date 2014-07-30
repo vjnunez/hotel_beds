@@ -30,7 +30,10 @@ module HotelBeds
       end
 
       def pagination_data
-        { :@pageNumber => Integer(page_number) }
+        {
+          :@pageNumber => Integer(page_number),
+          :@itemsPerPage => Integer(items_per_page)
+        }
       end
 
       def language
