@@ -45,7 +45,7 @@ module HotelBeds
         def parse_price_list(prices)
           if prices.empty?
             dates = (check_in_date..check_out_date).to_a
-            amount = (total_price / dates)
+            amount = total_price / dates.size
             dates.inject(Hash.new) do |result, date|
               result.merge(date => amount)
             end
