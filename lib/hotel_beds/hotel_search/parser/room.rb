@@ -9,11 +9,13 @@ module HotelBeds
           new(*args, &block).call
         end
 
-        attr_accessor :room
-        private :room=
+        attr_accessor :room, :check_in_date, :check_out_date
+        private :room=, :check_in_date=, :check_out_date=
 
-        def initialize(room)
+        def initialize(room, check_in_date:, check_out_date:)
           self.room = room
+          self.check_in_date = check_in_date
+          self.check_out_date = check_out_date
           freeze
         end
 
@@ -29,16 +31,29 @@ module HotelBeds
             board_code: room.at_css("HotelRoom Board").attr("code"),
             room_type_code: room.at_css("HotelRoom RoomType").attr("code"),
             room_type_characteristic: room.at_css("HotelRoom RoomType").attr("characteristic"),
-            price: ((room.at_css("HotelRoom") > "Price") > "Amount").first.content,
+            price: total_price,
             rates: parse_price_list(room.css("Price PriceList Price"))
           })
         end
 
         private
+        def total_price
+          raw = ((room.at_css("HotelRoom") > "Price") > "Amount").first.content
+          BigDecimal.new(raw.to_s)
+        end
+
         def parse_price_list(prices)
-          Array(prices).map do |price|
-            HotelBeds::HotelSearch::Parser::Price.call(price)
-          end.inject(Hash.new, :merge)
+          if prices.empty?
+            dates = (check_in_date..check_out_date).to_a
+            amount = (total_price / dates)
+            dates.inject(Hash.new) do |result, date|
+              result.merge(date => amount)
+            end
+          else
+            Array(prices).map do |price|
+              HotelBeds::HotelSearch::Parser::Price.call(price)
+            end.inject(Hash.new, :merge)
+          end
         end
       end
     end

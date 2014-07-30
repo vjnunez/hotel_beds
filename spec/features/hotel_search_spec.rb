@@ -9,8 +9,9 @@ RSpec.describe "performing a hotel search" do
         password: ENV.fetch("HOTEL_BEDS_PASSWORD"),
         proxy: ENV.fetch("HOTEL_BEDS_PROXY", nil)
       })
+      @stay_length_in_days = rand(3) + 1
       @check_in_date = Date.today + 28 + rand(10)
-      @check_out_date = @check_in_date + rand(3) + rand(2) + 1
+      @check_out_date = @check_in_date + @stay_length_in_days
       @response = @client.perform_hotel_search({
         check_in_date: @check_in_date,
         check_out_date: @check_out_date,
@@ -21,6 +22,7 @@ RSpec.describe "performing a hotel search" do
 
     let(:check_in_date) { @check_in_date }
     let(:check_out_date) { @check_out_date }
+    let(:stay_length_in_days) { @stay_length_in_days }
     let(:response) { @response }
 
     describe "#errors" do
@@ -45,6 +47,12 @@ RSpec.describe "performing a hotel search" do
         expect(room_counts.to_a.flatten.uniq).to eq([1])
       end
 
+      it "should have a destination code" do
+        subject.each do |hotel|
+          expect(hotel.destination_code).to be_present
+        end
+      end
+
       it "should have an availability token" do
         subject.each do |hotel|
           expect(hotel.availability_token).to be_present
@@ -65,14 +73,22 @@ RSpec.describe "performing a hotel search" do
 
       describe "#results" do
         describe "#rooms" do
-          subject { response.hotels.first.results.first.rooms.first }
+          subject do
+            results = response.hotels.map(&:results).to_a.flatten
+            results.map(&:rooms).to_a.flatten
+          end
 
           it "should parse the rates correctly" do
-            expect(subject.price).to eq(subject.rates.values.inject(:+))
+            subject.each do |room|
+              expect(room.price).to eq(room.rates.values.inject(:+))
+            end
           end
 
           it "should have the same number of rates as nights requested" do
-            expect(subject.rates.size).to eq(check_out_date - check_in_date)
+            subject.each do |room|
+              expect(room.rates).to_not be_empty
+              expect(room.rates.size).to eq(stay_length_in_days)
+            end
           end
         end
       end

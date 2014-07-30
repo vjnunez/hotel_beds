@@ -58,7 +58,11 @@ module HotelBeds
 
         def parsed_available_rooms
           Array(rooms).map do |room|
-            HotelBeds::HotelSearch::Parser::Room.call(room)
+            HotelBeds::HotelSearch::Parser::Room.call(
+              room,
+              check_in_date: request.check_in_date,
+              check_out_date: request.check_out_date
+            )
           end
         end
       end
