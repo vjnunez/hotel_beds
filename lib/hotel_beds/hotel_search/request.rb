@@ -20,7 +20,7 @@ module HotelBeds
       attribute :group_results, Virtus::Attribute::Boolean, default: false
 
       # validation
-      validates :language, :destination, length: { is: 3 }
+      validates :language, :destination, length: { is: 3, allow_blank: false }
       validates :session_id, :check_in_date, :check_out_date, presence: true
       validates :rooms, length: { minimum: 1, maximum: 5 }
       validates :page_number, numericality: {

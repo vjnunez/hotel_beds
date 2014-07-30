@@ -49,12 +49,10 @@ module HotelBeds
       end
 
       def destination
-        if __getobj__.destination
-          { Destination: {
-            :@code => String(__getobj__.destination).upcase,
-            :@type => "SIMPLE"
-          } }
-        end
+        { Destination: {
+          :@code => String(__getobj__.destination).upcase,
+          :@type => "SIMPLE"
+        } }
       end
 
       def hotels
