@@ -19,7 +19,7 @@ module HotelBeds
         attribute :rooms, Array[HotelBeds::Model::AvailableRoom]
 
         # validation
-        validates :destination_code, length: { is: 3 }
+        validates :destination_code, length: { is: 3, allow_blank: false }
         validates :rooms, length: { minimum: 1, maximum: 5 }
         validates :session_id, :availability_token, :contract_name,
           :contract_incoming_office_code, :check_in_date, :check_out_date,
