@@ -12,16 +12,18 @@ RSpec.describe "performing a hotel search" do
       @stay_length_in_days = rand(3) + 1
       @check_in_date = Date.today + 28 + rand(10)
       @check_out_date = @check_in_date + @stay_length_in_days
+      @requested_rooms = [HotelBeds::Model::RequestedRoom.new({ adult_count: 2 })]
       @response = @client.perform_hotel_search({
         check_in_date: @check_in_date,
         check_out_date: @check_out_date,
-        rooms: [{ adult_count: 2 }],
-        destination: "SYD"
+        rooms: @requested_rooms,
+        destination_code: "SYD"
       }).response
     end
 
     let(:check_in_date) { @check_in_date }
     let(:check_out_date) { @check_out_date }
+    let(:requested_rooms) { @requested_rooms }
     let(:stay_length_in_days) { @stay_length_in_days }
     let(:response) { @response }
 
@@ -42,14 +44,9 @@ RSpec.describe "performing a hotel search" do
         expect(subject.first).to be_kind_of(HotelBeds::Model::Hotel)
       end
 
-      it "should only have one room per result" do
-        room_counts = subject.map { |h| h.results.map { |r| r.rooms.size } }
-        expect(room_counts.to_a.flatten.uniq).to eq([1])
-      end
-
       it "should have a destination code" do
         subject.each do |hotel|
-          expect(hotel.destination_code).to be_present
+          expect(hotel.destination.code).to be_present
         end
       end
 
@@ -61,33 +58,57 @@ RSpec.describe "performing a hotel search" do
 
       it "should have a contract name" do
         subject.each do |hotel|
-          expect(hotel.contract_name).to be_present
+          expect(hotel.contract.name).to be_present
         end
       end
 
       it "should have a contract incoming office code" do
         subject.each do |hotel|
-          expect(hotel.contract_incoming_office_code).to be_present
+          expect(hotel.contract.incoming_office_code).to be_present
         end
       end
 
-      describe "#results" do
-        describe "#rooms" do
-          subject do
-            results = response.hotels.map(&:results).to_a.flatten
-            results.map(&:rooms).to_a.flatten
-          end
+      describe "#rooms" do
+        subject do
+          response.hotels.map(&:available_rooms).to_a.flatten
+        end
 
-          it "should parse the rates correctly" do
-            subject.each do |room|
-              expect(room.price).to eq(room.rates.values.inject(:+))
-            end
+        it "should have a price > 0" do
+          subject.each do |room|
+            expect(room.price).to be > 0
           end
+        end
 
-          it "should have the same number of rates as nights requested" do
-            subject.each do |room|
-              expect(room.rates).to_not be_empty
-              expect(room.rates.size).to eq(stay_length_in_days)
+        it "should parse the rates correctly" do
+          subject.each do |room|
+            expect(room.rates.values.inject(BigDecimal.new("0"), :+)).to eq(room.price)
+          end
+        end
+
+        it "should have the same number of rates as nights requested" do
+          subject.each do |room|
+            expect(room.rates).to_not be_empty
+            expect(room.rates.size).to eq(stay_length_in_days)
+          end
+        end
+      end
+
+      describe "#grouped_rooms" do
+        subject do
+          response.hotels.map do |h|
+            h.grouped_rooms(requested_rooms)
+          end
+        end
+
+        let(:requested_adult_count) { requested_rooms.map(&:adult_count).inject(0, :+) }
+        let(:requested_child_count) { requested_rooms.map(&:child_count).inject(0, :+) }
+
+        it "should return sets of rooms matching the requested rooms" do
+          subject.each do |results|
+            results.each do |result|
+              expect(result.size).to eq(requested_rooms.size)
+              expect(result.map(&:adult_count).inject(0, :+)).to eq(requested_adult_count)
+              expect(result.map(&:child_count).inject(0, :+)).to eq(requested_child_count)
             end
           end
         end

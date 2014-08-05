@@ -50,16 +50,16 @@ module HotelBeds
 
       def destination
         { Destination: {
-          :@code => String(__getobj__.destination).upcase,
+          :@code => String(__getobj__.destination_code).upcase,
           :@type => "SIMPLE"
         } }
       end
 
       def hotels
-        if Array(__getobj__.hotels).any?
+        if Array(__getobj__.hotel_codes).any?
           { HotelCodeList: {
             :@withinResults => "Y",
-            :ProductCode => Array(__getobj__.hotels)
+            :ProductCode => Array(__getobj__.hotel_codes)
           } }
         end
       end

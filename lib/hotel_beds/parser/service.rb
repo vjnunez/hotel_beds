@@ -1,4 +1,5 @@
 require "hotel_beds/parser"
+require "hotel_beds/parser/contract"
 
 module HotelBeds
   module Parser
@@ -7,12 +8,12 @@ module HotelBeds
 
       # attributes
       attribute :id, attr: "SPUI"
-      attribute :contract_name, selector: "Contract Name"
-      attribute :contract_incoming_office_code, selector: "Contract IncomingOffice", attr: "code"
-      attribute :check_in_date, selector: "DateFrom", attr: "date"
-      attribute :check_out_date, selector: "DateTo", attr: "date"
+      attribute :date_from, selector: "DateFrom", attr: "date"
+      attribute :date_to, selector: "DateTo", attr: "date"
       attribute :currency, selector: "Currency", attr: "code"
       attribute :amount, selector: "TotalAmount"
+      attribute :contract, selector: "Contract",
+        parser: HotelBeds::Parser::Contract
     end
   end
 end

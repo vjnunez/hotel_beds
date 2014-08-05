@@ -1,8 +1,8 @@
-require "hotel_beds/hotel_search/parser/room_grouper"
+require "hotel_beds/parser/room_grouper"
 require "hotel_beds/model/available_room"
 
-RSpec.describe HotelBeds::HotelSearch::Parser::RoomGrouper do
-  subject { described_class.new(requested_rooms, response_rooms).results }
+RSpec.describe HotelBeds::Parser::RoomGrouper do
+  subject { described_class.new(requested_rooms, response_rooms).groups }
 
   context "when asking for 3 rooms (2 x 2 adults & 1 x 1 adult, 1 child)" do
     let(:requested_rooms) do

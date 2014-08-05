@@ -7,11 +7,12 @@ module HotelBeds
 
     module ClassMethods
       class Attribute
-        attr_accessor :name, :selector, :attr, :multiple, :custom
-        private :name=, :selector=, :attr=, :multiple=, :custom=
+        attr_accessor :name, :parser, :selector, :attr, :multiple, :custom
+        private :name=, :parser=, :selector=, :attr=, :multiple=, :custom=
 
-        def initialize(name, selector: nil, attr: :content, multiple: false, &block)
+        def initialize(name, parser: nil, selector: nil, attr: :content, multiple: false, &block)
           self.name = name.to_sym
+          self.parser = parser
           self.selector = selector
           self.attr = attr
           self.multiple = !!multiple
@@ -25,7 +26,7 @@ module HotelBeds
           elsif multiple
             doc.css(selector).map(&method(:read_element))
           elsif selector
-            read_element(doc.at_css(selector))
+            (element = doc.at_css(selector)) && read_element(element) or nil
           else
             read_element(doc)
           end
@@ -33,7 +34,9 @@ module HotelBeds
 
         private
         def read_element(element)
-          if attr == :content
+          if parser
+            parser.new(element).to_h
+          elsif attr == :content
             element.content
           else
             element.attr(attr)
@@ -49,12 +52,14 @@ module HotelBeds
         (@attributes ||= Array.new).push(Attribute.new(*args, &block))
       end
 
-      protected def default_model_class(klass = nil)
+      def default_model_class(klass = nil)
         # set the class, if given
         @default_model_class = klass if klass
         # return the class, defaulting to HotelBeds::Model::ClassName
         @default_model_class ||= begin
-          klass_name = name.gsub(/^.*\:\:(.*?)$/, "\1")
+          klass_name = name.gsub(/^.*\:\:(.*?)$/, '\1')
+          file_name = klass_name.gsub(/(?<=.)([A-Z]+)/, '_\1').downcase
+          require "hotel_beds/model/#{file_name}"
           ::HotelBeds.const_get("Model").const_get(klass_name)
         end
       end

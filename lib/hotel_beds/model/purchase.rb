@@ -7,10 +7,13 @@ module HotelBeds
       include HotelBeds::Model
 
       # attributes
-      attribute :id, String
-      attribute :services, Array[Service]
+      attribute :token, String
+      attribute :time_to_expiration, Integer
+      attribute :agency_reference, String
+      attribute :status, String
       attribute :currency, String
       attribute :amount, BigDecimal
+      attribute :services, Array[HotelBeds::Model::Service]
     end
   end
 end

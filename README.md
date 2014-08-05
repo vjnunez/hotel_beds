@@ -27,7 +27,7 @@ search = client.perform_hotel_search({
   check_in_date: Date.today,
   check_out_date: Date.today + 1,
   rooms: [{ adult_count: 2 }],
-  destination: "SYD"
+  destination_code: "SYD"
 })
 
 # inspect the response

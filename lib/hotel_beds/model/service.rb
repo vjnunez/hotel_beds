@@ -1,4 +1,5 @@
 require "hotel_beds/model"
+require "hotel_beds/model/contract"
 
 module HotelBeds
   module Model
@@ -7,10 +8,9 @@ module HotelBeds
 
       # attributes
       attribute :id, String
-      attribute :contract_name, String
-      attribute :contract_incoming_office_code, String
-      attribute :check_in_date, Date
-      attribute :check_out_date, Date
+      attribute :contract, HotelBeds::Model::Contract
+      attribute :date_from, Date
+      attribute :date_to, Date
       attribute :currency, String
       attribute :amount, BigDecimal
     end

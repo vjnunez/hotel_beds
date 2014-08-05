@@ -1,6 +1,5 @@
-require "hotel_beds/model/hotel"
-require "hotel_beds/hotel_search/parser/errors"
-require "hotel_beds/hotel_search/parser/hotel"
+require "hotel_beds/parser/errors"
+require "hotel_beds/parser/hotel"
 
 module HotelBeds
   module HotelSearch
@@ -12,7 +11,7 @@ module HotelBeds
         self.request = request
         self.headers = response.header
         self.body = Nokogiri::XML(response.body.fetch(:get_hotel_valued_avail))
-        self.errors = HotelBeds::HotelSearch::Parser::Errors.call(response, body)
+        self.errors = HotelBeds::Parser::Errors.new(response).to_model(self)
         freeze
       end
 
@@ -46,11 +45,7 @@ module HotelBeds
 
       def hotels
         body.css("ServiceHotel").lazy.map do |hotel|
-          HotelBeds::HotelSearch::Parser::Hotel.call(
-            hotel: hotel,
-            currency: currency,
-            request: request
-          )
+          HotelBeds::Parser::Hotel.new(hotel).to_model
         end
       end
 

@@ -14,13 +14,14 @@ module HotelBeds
       attribute :language, String, default: "ENG"
       attribute :check_in_date, Date
       attribute :check_out_date, Date
-      attribute :destination, String
-      attribute :hotels, Array[Integer]
+      attribute :destination_code, String
+      attribute :hotel_codes, Array[Integer]
       attribute :rooms, Array[HotelBeds::Model::RequestedRoom]
-      attribute :group_results, Virtus::Attribute::Boolean, default: false
 
       # validation
-      validates :language, :destination, length: { is: 3, allow_blank: false }
+      validates :language, :destination_code, length: {
+        is: 3, allow_blank: false
+      }
       validates :session_id, :check_in_date, :check_out_date, presence: true
       validates :rooms, length: { minimum: 1, maximum: 5 }
       validates :page_number, numericality: {

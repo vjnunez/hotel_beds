@@ -1,5 +1,8 @@
 require "hotel_beds/model"
-require_relative "search_result"
+require "hotel_beds/model/available_room"
+require "hotel_beds/model/contract"
+require "hotel_beds/model/destination"
+require "hotel_beds/parser/room_grouper"
 
 module HotelBeds
   module Model
@@ -7,17 +10,19 @@ module HotelBeds
       include HotelBeds::Model
 
       # attributes
-      attribute :id, Integer
+      attribute :code, String
       attribute :availability_token, String
       attribute :name, String
       attribute :images, Array[String]
-      attribute :stars, Integer
       attribute :longitude, BigDecimal
       attribute :latitude, BigDecimal
-      attribute :results, Array[SearchResult]
-      attribute :destination_code, String
-      attribute :contract_name, String
-      attribute :contract_incoming_office_code, String
+      attribute :available_rooms, Array[HotelBeds::Model::AvailableRoom]
+      attribute :contract, HotelBeds::Model::Contract
+      attribute :destination, HotelBeds::Model::Destination
+
+      def grouped_rooms(requested_rooms)
+        HotelBeds::Parser::RoomGrouper.new(requested_rooms, available_rooms).groups
+      end
     end
   end
 end

@@ -1,5 +1,4 @@
 require "hotel_beds/model"
-require_relative "room"
 
 module HotelBeds
   module Model

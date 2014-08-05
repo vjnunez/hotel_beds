@@ -15,22 +15,22 @@ RSpec.describe "adding a hotel to the basket" do
         check_in_date: @check_in_date,
         check_out_date: @check_out_date,
         rooms: [{ adult_count: 2 }],
-        destination: "SYD"
+        destination_code: "SYD"
       }).response
 
       hotel = @search_response.hotels.first
-      result = hotel.results.first
+      rooms = hotel.available_rooms.first
 
       @operation = @client.add_hotel_room_to_basket({
         service: {
           check_in_date: @check_in_date,
           check_out_date: @check_out_date,
           availability_token: hotel.availability_token,
-          hotel_code: hotel.id,
-          destination_code: hotel.destination_code,
-          contract_name: hotel.contract_name,
-          contract_incoming_office_code: hotel.contract_incoming_office_code,
-          rooms: result.rooms
+          hotel_code: hotel.code,
+          destination_code: hotel.destination.code,
+          contract_name: hotel.contract.name,
+          contract_incoming_office_code: hotel.contract.incoming_office_code,
+          rooms: rooms
         }
       })
       if @operation.errors.any?
