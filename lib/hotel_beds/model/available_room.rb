@@ -1,6 +1,7 @@
 require "hotel_beds/model/room"
 require "hotel_beds/model/price"
 require "hotel_beds/model/cancellation_policy"
+require "hotel_beds/model/customer"
 
 module HotelBeds
   module Model
@@ -16,7 +17,9 @@ module HotelBeds
       attribute :price, BigDecimal
       attribute :number_available, Integer
       attribute :rates, Hash[Date => BigDecimal]
-      attribute :cancellation_policies, Array[CancellationPolicy],
+      attribute :cancellation_policies, Array[HotelBeds::Model::CancellationPolicy],
+        default: Array.new
+      attribute :customers, Array[HotelBeds::Model::Customer],
         default: Array.new
 
       def rates=(values)

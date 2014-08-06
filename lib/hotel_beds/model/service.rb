@@ -8,6 +8,8 @@ module HotelBeds
 
       # attributes
       attribute :id, String
+      attribute :type, String
+      attribute :status, String
       attribute :contract, HotelBeds::Model::Contract
       attribute :date_from, Date
       attribute :date_to, Date

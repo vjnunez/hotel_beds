@@ -1,6 +1,7 @@
 require "hotel_beds/parser"
 require "hotel_beds/parser/cancellation_policy"
 require "hotel_beds/parser/price"
+require "hotel_beds/parser/customer"
 
 module HotelBeds
   module Parser
@@ -28,6 +29,9 @@ module HotelBeds
       attribute :rates,
         selector: "Price PriceList Price", multiple: true,
         parser: HotelBeds::Parser::Price
+      attribute :customers,
+        selector: "HotelOccupancy GuestList Customer", multiple: true,
+        parser: HotelBeds::Parser::Customer
     end
   end
 end

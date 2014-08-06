@@ -1,5 +1,6 @@
 require "hotel_beds/parser"
 require "hotel_beds/parser/service"
+require "hotel_beds/parser/customer"
 
 module HotelBeds
   module Parser
@@ -16,6 +17,8 @@ module HotelBeds
       attribute :services,
         selector: "ServiceList > Service", multiple: true,
         parser: HotelBeds::Parser::Service
+      attribute :holder, selector: "Holder",
+        parser: HotelBeds::Parser::Customer
     end
   end
 end
