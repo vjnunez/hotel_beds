@@ -1,10 +1,11 @@
 require "securerandom"
+require "hotel_beds/action/request"
 require "hotel_beds/model"
 require "hotel_beds/model/customer"
 
 module HotelBeds
   module PurchaseConfirm
-    class Request
+    class Request < HotelBeds::Action::Request
       class Service
         include HotelBeds::Model
 
@@ -51,14 +52,10 @@ module HotelBeds
         end
       end
 
-      include HotelBeds::Model
-
       # attributes
-      attribute :language, String, default: "ENG"
       attribute :purchase, Purchase
 
       # validation
-      validates :language, length: { is: 3 }
       validates :purchase, presence: true
       validate do |request|
         if request.purchase && request.purchase.invalid?

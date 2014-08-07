@@ -1,17 +1,14 @@
 require "securerandom"
-require "hotel_beds/model"
+require "hotel_beds/action/request"
 require "hotel_beds/model/requested_room"
 
 module HotelBeds
   module HotelSearch
-    class Request
-      include HotelBeds::Model
-
+    class Request < HotelBeds::Action::Request
       # attributes
       attribute :session_id, String, default: SecureRandom.hex[0..15]
       attribute :page_number, Integer, default: 1
       attribute :items_per_page, Integer, default: 50
-      attribute :language, String, default: "ENG"
       attribute :check_in_date, Date
       attribute :check_out_date, Date
       attribute :destination_code, String
@@ -19,9 +16,7 @@ module HotelBeds
       attribute :rooms, Array[HotelBeds::Model::RequestedRoom]
 
       # validation
-      validates :language, :destination_code, length: {
-        is: 3, allow_blank: false
-      }
+      validates :destination_code, length: { is: 3, allow_blank: false }
       validates :session_id, :check_in_date, :check_out_date, presence: true
       validates :rooms, length: { minimum: 1, maximum: 5 }
       validates :page_number, numericality: {

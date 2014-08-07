@@ -1,8 +1,8 @@
-require "delegate"
+require "hotel_beds/action/envelope"
 
 module HotelBeds
   module BasketRemove
-    class Envelope < SimpleDelegator
+    class Envelope < HotelBeds::Action::Envelope
       def attributes
         {
           :Language => language,

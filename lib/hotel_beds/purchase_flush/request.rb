@@ -1,16 +1,12 @@
-require "hotel_beds/model"
+require "hotel_beds/action/request"
 
 module HotelBeds
   module PurchaseFlush
-    class Request
-      include HotelBeds::Model
-
+    class Request < HotelBeds::Action::Request
       # attributes
-      attribute :language, String, default: "ENG"
       attribute :purchase_token, String
 
       # validation
-      validates :language, length: { is: 3 }
       validates :purchase_token, presence: true
     end
   end

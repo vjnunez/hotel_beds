@@ -1,10 +1,11 @@
 require "securerandom"
+require "hotel_beds/action/request"
 require "hotel_beds/model"
 require "hotel_beds/model/available_room"
 
 module HotelBeds
   module HotelBasketAdd
-    class Request
+    class Request < HotelBeds::Action::Request
       class HotelService
         include HotelBeds::Model
 
@@ -34,15 +35,11 @@ module HotelBeds
         end
       end
 
-      include HotelBeds::Model
-
       # attributes
       attribute :session_id, String, default: SecureRandom.hex[0..15]
-      attribute :language, String, default: "ENG"
       attribute :service, HotelService
 
       # validation
-      validates :language, length: { is: 3 }
       validates :session_id, :service, presence: true
     end
   end

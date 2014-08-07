@@ -1,9 +1,9 @@
-require "delegate"
+require "hotel_beds/action/envelope"
 require "hotel_beds/builder/hotel_occupancy"
 
 module HotelBeds
   module HotelBasketAdd
-    class Envelope < SimpleDelegator
+    class Envelope < HotelBeds::Action::Envelope
       def attributes
         {
           Language: language,
