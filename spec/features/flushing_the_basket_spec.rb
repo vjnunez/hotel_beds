@@ -44,7 +44,7 @@ RSpec.describe "ordering a hotel room" do
       @basket_response = @basket_operation.response
 
       @flush_operation = @client.flush_purchase({
-        purchase: { token: @basket_response.purchase.token }
+        purchase_token: @basket_response.purchase.token
       })
       if @flush_operation.errors.any?
         raise StandardError, @flush_operation.errors.full_messages.join("\n")

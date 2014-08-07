@@ -4,6 +4,7 @@ require "hotel_beds/hotel_search/operation"
 require "hotel_beds/hotel_basket_add/operation"
 require "hotel_beds/purchase_confirm/operation"
 require "hotel_beds/purchase_flush/operation"
+require "hotel_beds/basket_remove/operation"
 
 module HotelBeds
   class Client
@@ -39,6 +40,12 @@ module HotelBeds
 
     def flush_purchase(*args)
       PurchaseFlush::Operation.new(*args).perform(
+        connection: connection
+      )
+    end
+
+    def remove_service_from_basket(*args)
+      BasketRemove::Operation.new(*args).perform(
         connection: connection
       )
     end

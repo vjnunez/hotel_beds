@@ -7,7 +7,7 @@ module HotelBeds
         {
           :Language => language,
           :@version => "2013/12",
-          :@purchaseToken => purchase.token
+          :@purchaseToken => purchase_token
         }
       end
     end

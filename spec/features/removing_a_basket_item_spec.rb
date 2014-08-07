@@ -1,6 +1,7 @@
 require "hotel_beds"
+require "securerandom"
 
-RSpec.describe "adding a hotel to the basket" do
+RSpec.describe "ordering a hotel room" do
   describe "#response" do
     before(:all) do
       @client = HotelBeds::Client.new({
@@ -11,17 +12,21 @@ RSpec.describe "adding a hotel to the basket" do
       })
       @check_in_date = Date.today + 28 + rand(10)
       @check_out_date = @check_in_date + rand(3) + rand(2) + 1
-      @search_response = @client.perform_hotel_search({
+      @search_operation = @client.perform_hotel_search({
         check_in_date: @check_in_date,
         check_out_date: @check_out_date,
         rooms: [{ adult_count: 2 }],
         destination_code: "SYD"
-      }).response
+      })
+      if @search_operation.errors.any?
+        raise StandardError, @search_operation.errors.full_messages.join("\n")
+      end
+      @search_response = @search_operation.response
 
       hotel = @search_response.hotels.first
       rooms = hotel.available_rooms.first
 
-      @operation = @client.add_hotel_room_to_basket({
+      @basket_operation = @client.add_hotel_room_to_basket({
         service: {
           check_in_date: @check_in_date,
           check_out_date: @check_out_date,
@@ -33,13 +38,24 @@ RSpec.describe "adding a hotel to the basket" do
           rooms: rooms
         }
       })
-      if @operation.errors.any?
-        raise StandardError, @operation.errors.full_messages.join("\n")
+      if @basket_operation.errors.any?
+        raise StandardError, @basket_operation.errors.full_messages.join("\n")
       end
-      @response = @operation.response
+      @basket_response = @basket_operation.response
+
+      @service_id = @basket_response.purchase.services.first.id
+      @remove_operation = @client.remove_service_from_basket({
+        purchase_token: @basket_response.purchase.token,
+        service_id: @service_id
+      })
+      if @remove_operation.errors.any?
+        raise StandardError, @remove_operation.errors.full_messages.join("\n")
+      end
+      @remove_operation = @remove_operation.response
     end
 
-    let(:response) { @response }
+    let(:response) { @remove_operation }
+    let(:service_id) { @service_id }
 
     subject { response }
 
@@ -50,8 +66,8 @@ RSpec.describe "adding a hotel to the basket" do
     describe "#purchase" do
       subject { response.purchase }
 
-      it "should have a service" do
-        expect(subject.services).to_not be_empty
+      it "should not have the service that was removed" do
+        expect(subject.services.map(&:id)).to_not include(service_id)
       end
     end
   end

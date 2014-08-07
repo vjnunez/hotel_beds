@@ -10,7 +10,7 @@ module HotelBeds
       def initialize(request, response)
         self.request = request
         self.headers = response.header
-        self.body = Nokogiri::XML(response.body.fetch(:purchase_confirm))
+        self.body = Nokogiri::XML(response.body.fetch(:service_remove))
         self.errors = HotelBeds::Parser::Errors.new(response).to_model(self)
         freeze
       end

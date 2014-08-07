@@ -8,7 +8,7 @@ module HotelBeds
           :Language => language,
           :@SPUI => service_id,
           :@version => "2013/12",
-          :@purchase_token => purchase_token
+          :@purchaseToken => purchase_token
         }
       end
     end
