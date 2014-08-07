@@ -3,6 +3,7 @@ require "hotel_beds/connection"
 require "hotel_beds/hotel_search/operation"
 require "hotel_beds/hotel_basket_add/operation"
 require "hotel_beds/purchase_confirm/operation"
+require "hotel_beds/purchase_flush/operation"
 
 module HotelBeds
   class Client
@@ -32,6 +33,12 @@ module HotelBeds
 
     def confirm_purchase(*args)
       PurchaseConfirm::Operation.new(*args).perform(
+        connection: connection
+      )
+    end
+
+    def flush_purchase(*args)
+      PurchaseFlush::Operation.new(*args).perform(
         connection: connection
       )
     end

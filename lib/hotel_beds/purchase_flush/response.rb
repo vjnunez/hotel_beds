@@ -1,8 +1,7 @@
 require "hotel_beds/parser/errors"
-require "hotel_beds/parser/purchase"
 
 module HotelBeds
-  module BasketRemove
+  module PurchaseFlush
     class Response
       attr_accessor :request, :headers, :body, :errors
       private :request=, :headers=, :body=, :errors=
@@ -10,7 +9,7 @@ module HotelBeds
       def initialize(request, response)
         self.request = request
         self.headers = response.header
-        self.body = Nokogiri::XML(response.body.fetch(:purchase_confirm))
+        self.body = Nokogiri::XML(response.body.fetch(:purchase_flush))
         self.errors = HotelBeds::Parser::Errors.new(response).to_model(self)
         freeze
       end

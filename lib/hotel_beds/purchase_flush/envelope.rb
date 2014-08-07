@@ -1,13 +1,13 @@
 require "delegate"
 
 module HotelBeds
-  module BasketRemove
+  module PurchaseFlush
     class Envelope < SimpleDelegator
       def attributes
         {
           :Language => language,
           :@version => "2013/12",
-          :@purchase_token => purchase_token
+          :@purchaseToken => purchase.token
         }
       end
     end
