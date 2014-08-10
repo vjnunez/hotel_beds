@@ -21,12 +21,13 @@ module HotelBeds
         end
 
         def retrieve(doc)
+          return nil if doc.nil?
           if custom
             custom.yield(doc)
           elsif multiple
             doc.css(selector).map(&method(:read_element))
           elsif selector
-            (element = doc.at_css(selector)) && read_element(element) or nil
+            (element = doc.at_css(selector)) && element && read_element(element) or nil
           else
             read_element(doc)
           end

@@ -1,5 +1,5 @@
 require "hotel_beds/model"
-require "hotel_beds/model/service"
+require "hotel_beds/model/hotel_service"
 require "hotel_beds/model/customer"
 
 module HotelBeds
@@ -14,7 +14,7 @@ module HotelBeds
       attribute :status, String
       attribute :currency, String
       attribute :amount, BigDecimal
-      attribute :services, Array[HotelBeds::Model::Service]
+      attribute :services, Array[HotelBeds::Model::HotelService]
       attribute :holder, HotelBeds::Model::Customer
     end
   end
