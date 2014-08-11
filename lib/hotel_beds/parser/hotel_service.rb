@@ -1,5 +1,4 @@
 require "hotel_beds/parser/hotel"
-require "hotel_beds/parser/contract"
 
 module HotelBeds
   module Parser

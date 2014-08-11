@@ -1,5 +1,4 @@
 require "hotel_beds/model/hotel"
-require "hotel_beds/model/contract"
 
 module HotelBeds
   module Model

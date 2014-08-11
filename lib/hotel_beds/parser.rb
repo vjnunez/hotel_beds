@@ -46,11 +46,18 @@ module HotelBeds
       end
 
       def attributes
-        @attributes ||= Array.new
+        @attributes ||= begin
+          super_class = ancestors[1]
+          if super_class.respond_to?(:attributes)
+            super_class.attributes
+          else
+            Array.new
+          end
+        end
       end
 
       protected def attribute(*args, &block)
-        (@attributes ||= Array.new).push(Attribute.new(*args, &block))
+        attributes.push(Attribute.new(*args, &block))
       end
 
       def default_model_class(klass = nil)

@@ -20,11 +20,9 @@ module HotelBeds
       attribute :room_type_code, selector: "HotelRoom RoomType", attr: "code"
       attribute :room_type_characteristic,
         selector: "HotelRoom RoomType", attr: "characteristic"
-      attribute :price do |element|
-        ((element.at_css("HotelRoom") > "Price") > "Amount").first.content
-      end
-      attribute :cancellation_policies,
-        selector: "HotelRoom CancellationPolicy", multiple: true,
+      attribute :price, selector: "HotelRoom > Price > Amount"
+      attribute :cancellation_policy,
+        selector: "HotelRoom CancellationPolicy",
         parser: HotelBeds::Parser::CancellationPolicy
       attribute :rates,
         selector: "Price PriceList Price", multiple: true,

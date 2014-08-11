@@ -73,23 +73,65 @@ RSpec.describe "ordering a hotel room" do
       @checkout_response = @checkout_operation.response
     end
 
-    let(:response) { @checkout_response }
+    describe "basket response" do
+      let(:response) { @basket_response }
 
-    subject { response }
+      subject { response }
 
-    it "should be a success" do
-      expect(subject).to be_success
-    end
-
-    describe "#purchase" do
-      subject { response.purchase }
-
-      it "should have a service" do
-        expect(subject.services).to_not be_empty
+      it "should be a success" do
+        expect(subject).to be_success
       end
 
-      it "should have a agency reference" do
-        expect(subject.agency_reference).to eq(@agency_reference)
+      describe "#purchase" do
+        subject { response.purchase }
+
+        it "should have a service" do
+          expect(subject.services).to_not be_empty
+        end
+      end
+
+      describe "#purchase.services" do
+        subject { response.purchase.services }
+
+        it "should alway have a contract" do
+          subject.each do |service|
+            expect(service.contract).to_not be_nil
+          end
+        end
+      end
+
+      describe "#purchase.services.available_rooms" do
+        subject do
+          response.purchase.services.map(&:available_rooms).inject(Array.new, :+)
+        end
+
+        it "should have a cancellation policy" do
+          subject.each do |room|
+            expect(room.cancellation_policy).to_not be_nil
+          end
+        end
+      end
+    end
+
+    describe "checkout response" do
+      let(:response) { @checkout_response }
+
+      subject { response }
+
+      it "should be a success" do
+        expect(subject).to be_success
+      end
+
+      describe "#purchase" do
+        subject { response.purchase }
+
+        it "should have a service" do
+          expect(subject.services).to_not be_empty
+        end
+
+        it "should have a agency reference" do
+          expect(subject.agency_reference).to eq(@agency_reference)
+        end
       end
     end
   end
