@@ -17,7 +17,8 @@ module HotelBeds
       attribute :price, BigDecimal
       attribute :number_available, Integer
       attribute :rates, Hash[Date => BigDecimal]
-      attribute :cancellation_policy, HotelBeds::Model::CancellationPolicy
+      attribute :cancellation_policies, Array[HotelBeds::Model::CancellationPolicy],
+        default: Array.new
       attribute :customers, Array[HotelBeds::Model::Customer],
         default: Array.new
 

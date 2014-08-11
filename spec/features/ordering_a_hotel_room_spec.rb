@@ -107,7 +107,7 @@ RSpec.describe "ordering a hotel room" do
 
         it "should have a cancellation policy" do
           subject.each do |room|
-            expect(room.cancellation_policy).to_not be_nil
+            expect(room.cancellation_policies).to_not be_empty
           end
         end
       end

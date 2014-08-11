@@ -21,8 +21,8 @@ module HotelBeds
       attribute :room_type_characteristic,
         selector: "HotelRoom RoomType", attr: "characteristic"
       attribute :price, selector: "HotelRoom > Price > Amount"
-      attribute :cancellation_policy,
-        selector: "HotelRoom CancellationPolicy",
+      attribute :cancellation_policies,
+        selector: "HotelRoom CancellationPolicy", multiple: true,
         parser: HotelBeds::Parser::CancellationPolicy
       attribute :rates,
         selector: "Price PriceList Price", multiple: true,
