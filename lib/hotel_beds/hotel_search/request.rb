@@ -26,8 +26,12 @@ module HotelBeds
         unless (1..5).cover?(search.rooms.size)
           search.errors.add(:rooms, "quantity must be between 1 and 5")
         end
-        unless search.rooms.all?(&:valid?)
-          search.errors.add(:rooms, "are invalid")
+        search.rooms.each do |room|
+          unless room.valid?
+            room.errors.full_messages.each do |message|
+              search.errors.add(:rooms, message)
+            end
+          end
         end
       end
     end
