@@ -1,6 +1,7 @@
 require "hotel_beds/parser"
 require "hotel_beds/parser/hotel_service"
 require "hotel_beds/parser/customer"
+require "hotel_beds/parser/reference"
 
 module HotelBeds
   module Parser
@@ -19,6 +20,8 @@ module HotelBeds
         parser: HotelBeds::Parser::HotelService
       attribute :holder, selector: "Holder",
         parser: HotelBeds::Parser::Customer
+      attribute :reference, selector: "Reference",
+        parser: HotelBeds::Parser::Reference
     end
   end
 end

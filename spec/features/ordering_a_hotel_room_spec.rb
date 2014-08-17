@@ -125,6 +125,11 @@ RSpec.describe "ordering a hotel room" do
       describe "#purchase" do
         subject { response.purchase }
 
+        it "should have a reference" do
+          expect(subject.reference).to_not be_nil
+          expect(subject.reference.file_number).to_not be_empty
+        end
+
         it "should have a service" do
           expect(subject.services).to_not be_empty
         end
