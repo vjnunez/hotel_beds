@@ -13,9 +13,6 @@ module HotelBeds
       attribute :room_count, selector: "HotelOccupancy RoomCount"
       attribute :adult_count, selector: "HotelOccupancy AdultCount"
       attribute :child_count, selector: "HotelOccupancy ChildCount"
-      attribute :child_ages,
-        selector: "HotelOccupancy GuestList Customer[type='CH'] Age",
-        multiple: true
       attribute :number_available, selector: "HotelRoom", attr: "availCount"
       attribute :description, selector: "HotelRoom RoomType"
       attribute :board, selector: "HotelRoom Board"
