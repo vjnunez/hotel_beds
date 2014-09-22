@@ -1,4 +1,5 @@
 require "hotel_beds/parser/hotel"
+require "hotel_beds/parser/supplier"
 
 module HotelBeds
   module Parser
@@ -11,6 +12,8 @@ module HotelBeds
       attribute :date_to, selector: "DateTo", attr: "date"
       attribute :currency, selector: "Currency", attr: "code"
       attribute :amount, selector: "TotalAmount"
+      attribute :supplier, selector: "Supplier",
+        parser: HotelBeds::Parser::Supplier
     end
   end
 end
