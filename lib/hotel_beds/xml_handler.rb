@@ -21,7 +21,11 @@ module HotelBeds
       object.properties.select do |property|
         selectors == property.selectors && name.to_sym == property.attribute
       end.each do |property|
-        property.value = value
+        if property.array?
+          property.value.push(value)
+        else
+          property.value ||= value
+        end
       end
     end
 
@@ -29,7 +33,11 @@ module HotelBeds
       object.properties.select do |property|
         selectors == property.selectors && :content == property.attribute
       end.each do |property|
-        property.value = value
+        if property.array?
+          property.value.push(value)
+        else
+          property.value ||= value
+        end
       end
     end
   end

@@ -12,6 +12,18 @@ RSpec.describe HotelBeds::XmlHandler do
           <alsoignore />
           <boolean yes="true" no="false" />
         </inner>
+
+        <urls>
+          <url>http://example.com/123</url>
+          <url>http://example.com/456</url>
+          <non-url>A label</non-url>
+        </urls>
+
+        <images>
+          <image src="http://example.com/123.jpg" />
+          <image src="http://example.com/456.jpg" />
+          <image />
+        </image>
       </root>
     ))
   end
@@ -19,12 +31,18 @@ RSpec.describe HotelBeds::XmlHandler do
   let(:object) do
     Class.new do
       class Property
-        attr_accessor :name, :attribute, :selectors, :value
+        attr_accessor :name, :attribute, :selectors, :array, :value
 
-        def initialize(name:, attribute:, selectors:)
+        def initialize(name:, attribute:, selectors:, array: false)
           self.name = name.to_sym
           self.attribute = attribute.to_sym
           self.selectors = selectors.map(&:to_sym)
+          self.array = !!array
+          self.value = Array.new if array?
+        end
+
+        def array?
+          !!array
         end
       end
 
@@ -35,6 +53,8 @@ RSpec.describe HotelBeds::XmlHandler do
           Property.new(name: :contents, attribute: :content, selectors: %w(root inner attr)),
           Property.new(name: :yes, attribute: :yes, selectors: %w(root inner boolean)),
           Property.new(name: :no, attribute: :no, selectors: %w(root inner boolean)),
+          Property.new(name: :urls, attribute: :content, selectors: %w(root urls url), array: true),
+          Property.new(name: :image_urls, attribute: :src, selectors: %w(root images image), array: true),
         ]
       end
 
@@ -58,5 +78,7 @@ RSpec.describe HotelBeds::XmlHandler do
     expect(object.contents).to eq("contained text")
     expect(object.yes).to eq("true")
     expect(object.no).to eq("false")
+    expect(object.urls).to eq(["http://example.com/123", "http://example.com/456"])
+    expect(object.image_urls).to eq(["http://example.com/123.jpg", "http://example.com/456.jpg"])
   end
 end
