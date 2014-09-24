@@ -21,23 +21,15 @@ module HotelBeds
       object.properties.select do |property|
         selectors == property.selectors && name.to_sym == property.attribute
       end.each do |property|
-        if property.array?
-          property.value.push(value)
-        else
-          property.value ||= value
-        end
+        property.value = value
       end
     end
 
     def text(value)
       object.properties.select do |property|
-        selectors == property.selectors && :content == property.attribute
+        selectors == property.selectors && property.content?
       end.each do |property|
-        if property.array?
-          property.value.push(value)
-        else
-          property.value ||= value
-        end
+        property.value = value
       end
     end
   end

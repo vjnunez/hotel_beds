@@ -31,14 +31,29 @@ RSpec.describe HotelBeds::XmlHandler do
   let(:object) do
     Class.new do
       class Property
-        attr_accessor :name, :attribute, :selectors, :array, :value
+        attr_accessor :name, :attribute, :selectors, :array, :content
+        attr_reader :value
+        private :name=, :attribute=, :selectors=, :array=, :content=
 
-        def initialize(name:, attribute:, selectors:, array: false)
+        def initialize(name:, selectors:, attribute: nil, array: false, content: false)
           self.name = name.to_sym
-          self.attribute = attribute.to_sym
           self.selectors = selectors.map(&:to_sym)
+          self.attribute = attribute.to_sym if attribute
           self.array = !!array
-          self.value = Array.new if array?
+          self.content = !!content
+          @value = Array.new if array?
+        end
+
+        def value=(value)
+          if array?
+            @value.push(value)
+          else
+            @value = value
+          end
+        end
+
+        def content?
+          !!content
         end
 
         def array?
@@ -50,10 +65,10 @@ RSpec.describe HotelBeds::XmlHandler do
         @properties ||= [
           Property.new(name: :name, attribute: :name, selectors: %w(root)),
           Property.new(name: :value, attribute: :value, selectors: %w(root inner)),
-          Property.new(name: :contents, attribute: :content, selectors: %w(root inner attr)),
+          Property.new(name: :contents, content: true, selectors: %w(root inner attr)),
           Property.new(name: :yes, attribute: :yes, selectors: %w(root inner boolean)),
           Property.new(name: :no, attribute: :no, selectors: %w(root inner boolean)),
-          Property.new(name: :urls, attribute: :content, selectors: %w(root urls url), array: true),
+          Property.new(name: :urls, content: true, selectors: %w(root urls url), array: true),
           Property.new(name: :image_urls, attribute: :src, selectors: %w(root images image), array: true),
         ]
       end
