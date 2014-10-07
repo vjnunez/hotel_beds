@@ -1,5 +1,6 @@
 require "hotel_beds/parser/hotel"
 require "hotel_beds/parser/supplier"
+require "hotel_beds/parser/reference"
 
 module HotelBeds
   module Parser
