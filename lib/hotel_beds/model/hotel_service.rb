@@ -1,4 +1,5 @@
 require "hotel_beds/model/hotel"
+require "hotel_beds/model/reference"
 
 module HotelBeds
   module Model
@@ -11,6 +12,7 @@ module HotelBeds
       attribute :date_to, Date
       attribute :currency, String
       attribute :amount, BigDecimal
+      attribute :reference, HotelBeds::Model::Reference
     end
   end
 end

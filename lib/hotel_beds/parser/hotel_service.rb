@@ -14,6 +14,8 @@ module HotelBeds
       attribute :amount, selector: "TotalAmount"
       attribute :supplier, selector: "Supplier",
         parser: HotelBeds::Parser::Supplier
+      attribute :reference, selector: "Reference",
+        parser: HotelBeds::Parser::Reference
     end
   end
 end
