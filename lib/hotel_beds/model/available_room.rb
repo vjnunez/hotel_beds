@@ -27,11 +27,10 @@ module HotelBeds
           prices = values.map do |attrs|
             HotelBeds::Model::Price.new(attrs)
           end
-          hash = prices.inject(Hash.new) do |result, price|
+          hash = prices.each_with_object(Hash.new) do |price, result|
             price.dates.each do |date|
-              result.merge!(date => price.amount)
+              result[date] = price.amount
             end
-            result
           end
           super(hash)
         else

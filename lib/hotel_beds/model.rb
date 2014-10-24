@@ -11,11 +11,11 @@ module HotelBeds
     end
 
     def deep_attributes
-      attributes.inject(Hash.new) do |result, (key, value)|
+      attributes.each_with_object(Hash.new) do |(key, value), result|
         if value.respond_to?(:deep_attributes)
-          result.merge(key => value.deep_attributes)
+          result[key] = value.deep_attributes
         else
-          result.merge(key => value)
+          result[key] = value
         end
       end
     end

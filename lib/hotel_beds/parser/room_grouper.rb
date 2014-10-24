@@ -23,7 +23,7 @@ module HotelBeds
 
       def expand_combinations(combinations)
         combinations.map do |rooms|
-          rooms.inject(Array.new) do |result, room|
+          rooms.each_with_object(Array.new) do |room, result|
             # get an array of all the child ages
             child_ages = requested_rooms_child_ages_by_occupants.fetch(occupant_key(room))
             1.upto(room.room_count) do |i|
@@ -32,7 +32,6 @@ module HotelBeds
                 r.child_ages = child_ages.pop
               end
             end
-            result
           end
         end
       end
@@ -46,7 +45,7 @@ module HotelBeds
       # returns a array of arrays, each contains available rooms for a given
       # room occupancy
       def room_options_grouped_by_occupants
-        requested_room_count_by_occupants.inject(Array.new) do |result, (key, count)|
+        requested_room_count_by_occupants.each_with_object(Array.new) do |(key, count), result|
           result << response_rooms_by_occupants.fetch(key).select do |room|
             room.room_count == count
           end
@@ -57,38 +56,35 @@ module HotelBeds
 
       # returns a hash of OK => [Integer]
       def requested_rooms_child_ages_by_occupants
-        requested_rooms.inject(Hash.new) do |result, room|
+        requested_rooms.each_with_object(Hash.new) do |room, result|
           key = occupant_key(room)
           result[key] ||= Array.new
           result[key] += room.child_ages
-          result
         end
       end
 
       # returns a hash of OK => [RR]
       def requested_rooms_by_occupants
-        requested_rooms.inject(Hash.new) do |result, room|
+        requested_rooms.each_with_object(Hash.new) do |room, result|
           key = occupant_key(room)
           result[key] ||= Array.new
           result[key] << room
-          result
         end
       end
 
       # returns a hash of OK => 1 (count)
       def requested_room_count_by_occupants
-        requested_rooms_by_occupants.inject(Hash.new) do |result, (key, rooms)|
-          result.merge(key => rooms.size)
+        requested_rooms_by_occupants.each_with_object(Hash.new) do |(key, rooms), result|
+          result[key] = rooms.size
         end
       end
 
       # returns a hash of OK => [AvailableRoom, AvailableRoom, AvailableRoom]
       def response_rooms_by_occupants
-        response_rooms.inject(Hash.new) do |result, room|
+        response_rooms.each_with_object(Hash.new) do |room, result|
           key = occupant_key(room)
           result[key] ||= Array.new
           result[key].push(room)
-          result
         end
       end
 

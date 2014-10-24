@@ -88,8 +88,8 @@ module HotelBeds
 
       # parses the document into a hash of attributes
       def to_h
-        self.class.attributes.inject(Hash.new) do |result, attribute|
-          result.merge(attribute.name => attribute.retrieve(doc))
+        self.class.attributes.each_with_object(Hash.new) do |attribute, result|
+          result[attribute.name] = attribute.retrieve(doc)
         end
       end
 
