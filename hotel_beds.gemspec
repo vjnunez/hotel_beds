@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec", "~> 4.2.10"
   spec.add_development_dependency "dotenv", "~> 0.11.1"
   spec.add_development_dependency "codeclimate-test-reporter"
+  spec.add_development_dependency "ox", "~> 2.1.3"
 end
