@@ -3,6 +3,7 @@ require "hotel_beds/connection"
 require "hotel_beds/hotel_search/operation"
 require "hotel_beds/hotel_basket_add/operation"
 require "hotel_beds/purchase_confirm/operation"
+require "hotel_beds/purchase_cancel/operation"
 require "hotel_beds/purchase_flush/operation"
 require "hotel_beds/basket_remove/operation"
 
@@ -49,5 +50,12 @@ module HotelBeds
         connection: connection
       )
     end
+
+    def cancel_purchase(*args)
+      PurchaseCancel::Operation.new(*args).perform(
+        connection: connection
+      )
+    end
+
   end
 end
