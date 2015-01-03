@@ -6,35 +6,12 @@ module HotelBeds
       def attributes
         {
           Language: language,
-          ConfirmationData: {
-            :"@purchaseToken" => purchase.token,
-            :Holder => customer(purchase.holder),
-            :AgencyReference => purchase.agency_reference,
-            :ConfirmationServiceDataList => {
-              :ServiceData => purchase.services.map(&method(:service_data))
+          PurchaseReference: {
+            :FileNumber => purchase_reference.file_number,
+            :IncomingOffice => {
+              :@code => purchase_reference.incoming_office
             }
           }
-        }
-      end
-
-      private
-      def service_data(service)
-        {
-          :@SPUI => service.id,
-          :"@xsi:type" => "ConfirmationServiceDataHotel",
-          :CustomerList => {
-            :Customer => service.customers.map(&method(:customer))
-          }
-        }
-      end
-
-      def customer(customer)
-        {
-          :@type => (:child == customer.type ? "CH" : "AD"),
-          :CustomerId => customer.id,
-          :Age => customer.age,
-          :Name => customer.name,
-          :LastName => customer.last_name,
         }
       end
     end
