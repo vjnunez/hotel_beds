@@ -5,6 +5,7 @@ module HotelBeds
     class Envelope < HotelBeds::Action::Envelope
       def attributes
         {
+          :@type => 'C',
           Language: language,
           PurchaseReference: {
             :FileNumber => purchase_reference.file_number,
