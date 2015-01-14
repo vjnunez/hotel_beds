@@ -19,6 +19,7 @@ module HotelBeds
 
       # attributes
       attribute :purchase_reference, PurchaseReference
+      attribute :view_or_cancel, String
 
       # validation
       validates :purchase_reference, presence: true
