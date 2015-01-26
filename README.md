@@ -1,5 +1,7 @@
 [![Codeship Status](https://www.codeship.io/projects/808271e0-e973-0131-1052-5240ebfefa5a/status)](https://www.codeship.io/projects/26188) [![Gem Version](https://badge.fury.io/rb/hotel_beds.svg)](https://rubygems.org/gems/hotel_beds) [![Code Climate](https://codeclimate.com/github/platformq/hotel_beds/badges/gpa.svg)](https://codeclimate.com/github/platformq/hotel_beds) [![Code Climate](https://codeclimate.com/github/platformq/hotel_beds/badges/coverage.svg)](https://codeclimate.com/github/platformq/hotel_beds)
 
+**NOTE: This gem is no longer under active development. Feel free to fork and continue development.**
+
 The `hotel_beds` gem interfaces with the [HotelBeds.com](http://www.hotelbeds.com/) SOAP API to search for and book hotel rooms.
 
 ## Installation
