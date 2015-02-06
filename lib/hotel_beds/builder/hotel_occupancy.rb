@@ -10,6 +10,19 @@ module HotelBeds
 
       def initialize(rooms)
         self.rooms = rooms
+
+        unless rooms.size > 0
+          raise ArgumentError, "At least 1 room must be specified"
+        end
+
+        unless rooms.map(&:adult_count).uniq.size < 2
+          raise ArgumentError, "All room adult_count values must match"
+        end
+
+        unless rooms.map(&:child_count).uniq.size < 2
+          raise ArgumentError, "All room child_count values must match"
+        end
+
         freeze
       end
 
@@ -18,11 +31,11 @@ module HotelBeds
       end
 
       def adult_count
-        rooms.map(&:adult_count).sum
+        rooms.first.adult_count
       end
 
       def child_count
-        rooms.map(&:child_count).sum
+        rooms.first.child_count
       end
 
       def to_h
