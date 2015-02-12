@@ -61,6 +61,7 @@ module HotelBeds
 
         # logging
         if configuration.enable_logging?
+          config.logger Rails.logger
           config.log true
           config.log_level :debug
           config.pretty_print_xml true
