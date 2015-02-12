@@ -5,6 +5,7 @@ module HotelBeds
       {
         test: "http://testapi.interface-xml.com/#{path}".freeze,
         live: "http://api.interface-xml.com/#{path}".freeze,
+        gzip: "http://testapi.interface-xml.com/appservices/ws/AcceptanceTest".freeze
       }
     end
     
