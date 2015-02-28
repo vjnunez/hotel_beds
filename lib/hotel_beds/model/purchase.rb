@@ -2,6 +2,7 @@ require "hotel_beds/model"
 require "hotel_beds/model/hotel_service"
 require "hotel_beds/model/customer"
 require "hotel_beds/model/reference"
+require "hotel_beds/model/payment_data"
 
 module HotelBeds
   module Model
@@ -18,6 +19,7 @@ module HotelBeds
       attribute :services, Array[HotelBeds::Model::HotelService]
       attribute :holder, HotelBeds::Model::Customer
       attribute :reference, HotelBeds::Model::Reference
+      attribute :payment_data, HotelBeds::Model::PaymentData
     end
   end
 end
