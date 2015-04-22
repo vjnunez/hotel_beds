@@ -13,7 +13,7 @@ module HotelBeds
       # validation
       validates :adult_count, :child_count, numericality: {
         greater_than_or_equal_to: 0,
-        less_than_or_equal_to: 4,
+        less_than_or_equal_to: 20,
         only_integer: true,
       }
       validate do |room|
