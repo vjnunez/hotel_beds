@@ -50,10 +50,24 @@ module HotelBeds
       end
 
       def destination
-        { Destination: {
-          :@code => String(__getobj__.destination_code).upcase,
-          :@type => "SIMPLE"
-        } }
+        dest = {
+          Destination: {
+            :@code => String(__getobj__.destination_code).upcase,
+            :@type => "SIMPLE"
+          }
+        }
+        if Array(__getobj__.zone_codes).any?
+          dest[:Destination][:ZoneList] = __getobj__.zone_codes.map{ |code|
+            {
+              Zone: {
+                :@type => "SIMPLE",
+                :@code => code
+              }
+            }
+          }
+        end
+        # raise dest.inspect
+        dest
       end
 
       def hotels

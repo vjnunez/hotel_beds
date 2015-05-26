@@ -12,6 +12,7 @@ module HotelBeds
       attribute :check_in_date, Date
       attribute :check_out_date, Date
       attribute :destination_code, String
+      attribute :zone_codes, Array[Integer]
       attribute :hotel_codes, Array[Integer]
       attribute :rooms, Array[HotelBeds::Model::RequestedRoom]
 
